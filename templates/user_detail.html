@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USER DETAIL - CRM</title>
+  <link href='{{url_for("static", filename="style.css")}}' rel="stylesheet">
+</head>
+
+<body>
+  <div class="main-container">
+    <nav>
+      <ul class="menu">
+        <li class="menu-list">
+          <a href="/users">User</a>
+        </li>
+        <li class="menu-list">
+          <a href="/order">Order</a>
+        </li>
+        <li class="menu-list">
+          <a href="/orderitem">Order Item</a>
+        </li>
+        <li class="menu-list">
+          <a href="/item">Item</a>
+        </li>
+        <li class="menu-list">
+          <a href="/stores">Store</a>
+        </li>
+      </ul>
+    </nav>
+    <h2>User {{userinfo['Name']}}님</h2>
+    <table class="info-table">
+      <tr class="info-row">
+        {% for key in userinfo.keys() %}
+        <th class="info-type">
+          {{ key }}
+        </th>
+        {% endfor %}
+      </tr>
+      <tr class="info-row no-background">
+        {% for value in userinfo.values() %}
+        <td class="info-single-item">
+          {{ value }}
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+
+    <button onclick="window.history.back()">뒤로 돌아가기</button>
+  </div>
+</body>
+</html>

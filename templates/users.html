@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USERS - CRM</title>
+  <link href='{{url_for("static", filename="style.css")}}' rel="stylesheet">
+  <style>
+    .highlighted {
+      background-color: yellow;
+    }
+
+    span {
+      padding: 0;
+    }
+
+    .info-row:hover{
+      background-color: var(--blue-light);
+      cursor: pointer;
+    }
+
+    p {
+      display: inline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-container">
+    <nav>
+      <ul class="menu">
+        <li class="menu-list">
+          <a href="/users">User</a>
+        </li>
+        <li class="menu-list">
+          <a href="/order">Order</a>
+        </li>
+        <li class="menu-list">
+          <a href="/orderitem">Order Item</a>
+        </li>
+        <li class="menu-list">
+          <a href="/item">Item</a>
+        </li>
+        <li class="menu-list">
+          <a href="/stores">Store</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="search">
+      <form class="search-form" action="/users/" method="GET">
+        <div>
+          <label for="name">Name :</label>
+          <input name="name" class="input-form" type="text" value="{{search_name}}" size="5" />
+        </div>
+        <div>
+          <label for="gender">Gender :</label>
+          <select name="gender" class="input-form">
+            <option value=""></option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+        </div>
+        <button type="submit">검색</button>
+      </form>
+    </div>
+    {% if users %}
+    <table class="info-table">
+      <thead>
+        <tr class="info-row">
+          {% for key in users[0].keys() %}
+          {% if key != 'Id' %}
+          <th class="info-type">
+            {{ key }}
+          </th>
+          {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(users|length) %}
+        {% set userDetatilURL ='/user_detail/' + users[i]['Id'] %}
+        <tr class="info-row" onclick="window.location.href='{{userDetatilURL}}'">
+          {% for key in users[i].keys() %}
+          {% if key != 'Id' %}
+          <td class="info-single-item">
+            {% if key == 'Name' and search_name %}
+            {% for c in range(users[i]['Name']|length) %}<!-- 
+            -->{% if highlighted[i][c] == 1 %}<!-- 
+            --><span class="highlighted">{{users[i]['Name'][c]}}</span><!-- 
+            -->{% else %}<!-- 
+            --><span>{{users[i]['Name'][c]}}</span><!-- 
+            -->{% endif %}<!-- 
+            -->{% endfor %}
+            {% else %}
+            {{users[i][key]}}
+            {% endif %}
+          </td>
+          {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+    {% endif %}
+    <div class="pagination">
+      <ul class="paging-bar">
+        {% if page > 10 %}
+        <li>
+          <a class="prev-prev paging"
+            href="/users/?page={{page-10}}&name={{search_name}}&gender={{search_gender}}">&lt;&lt;</a>
+        </li>
+        {% endif %}
+        {% if page > 1 %}
+        <li>
+          <a class="prev paging" href="/users/?page={{page-1}}&name={{search_name}}&gender={{search_gender}}">&lt;</a>
+        </li>
+        {% endif %}
+        {% for i in range(((page-1)//10)*10+1, [((page-1)//10)*10+11, total_pages+1]|min ) %}
+        <li>
+          <a class="paging {% if i == page %} current {% endif %}"
+            href="/users/?page={{i}}&name={{search_name}}&gender={{search_gender}}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        {% if total_pages > page %}
+        <li>
+          <a class="next paging" href="/users/?page={{page+1}}&name={{search_name}}&gender={{search_gender}}">&gt;</a>
+        </li>
+        {% endif %}
+        {% if total_pages >= page+10 %}
+        <li>
+          <a class="next-next paging"
+            href="/users/?page={{page+10}}&name={{search_name}}&gender={{search_gender}}">&gt;&gt;</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
