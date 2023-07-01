@@ -7,27 +7,17 @@
   <title>USERS - CRM</title>
   <link href='{{url_for("static", filename="style.css")}}' rel="stylesheet">
   <style>
-    .highlighted {
-      background-color: yellow;
-    }
 
-    span {
-      padding: 0;
-    }
-
-    .info-row:hover{
-      background-color: var(--blue-light);
-      cursor: pointer;
-    }
-
-    p {
-      display: inline;
-    }
   </style>
 </head>
 
 <body>
   <div class="main-container">
+    <!-- 
+    ==================
+          menu bar
+    ==================
+    -->
     <nav>
       <ul class="menu">
         <li class="menu-list">
@@ -47,6 +37,12 @@
         </li>
       </ul>
     </nav>
+
+    <!-- 
+    ==================
+        search bar
+    ==================
+    -->
     <div class="search">
       <form class="search-form" action="/users/" method="GET">
         <div>
@@ -64,6 +60,13 @@
         <button type="submit">검색</button>
       </form>
     </div>
+
+    <!-- 
+    ==================
+          table
+    ==================
+    -->
+
     {% if users %}
     <table class="info-table">
       <thead>
@@ -101,9 +104,14 @@
         </tr>
         {% endfor %}
       </tbody>
-
     </table>
     {% endif %}
+
+    <!-- 
+    ==================
+        pagination
+    ==================
+    -->
     <div class="pagination">
       <ul class="paging-bar">
         {% if page > 10 %}
@@ -137,8 +145,6 @@
       </ul>
     </div>
   </div>
-
-
 </body>
 
 </html>

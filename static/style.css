@@ -208,14 +208,10 @@ button:hover {
   padding: 10px;
 }
 
-.id-link {
-  color: var(--bs-blue);
+.highlighted {
+  background-color: var(--bs-yellow);
 }
 
-.id-link:hover {
-  color: var(--bs-blue-dark);
-  text-decoration: underline;
-}
 
 /* 
 ==================
