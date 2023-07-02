@@ -15,17 +15,20 @@ def get_data_from_file(filename):
 def filter_data(data, search_name="", search_gender=""):
     filtered_data = []
     highlighted = []
-    for d in data:
-        if (is_name_match(search_name, d['Name']) and
-            is_gender_match(search_gender, d['Gender'])) :
-            filtered_data.append(d)
-            match = [0 for _ in range(len(d['Name']))] # match되는 부분을 저장할 list
-            if (search_name) :
-                for i in range(len(d['Name'])-len(search_name)+1):
-                    if d['Name'][i:i+len(search_name)] == search_name:
-                        # match하면 1, 아니면 0으로 남아있음
-                        match[i:i+len(search_name)] = [1 for _ in range(i, i+len(search_name))]
-            highlighted.append(match)
+    if bool(search_name) or bool(search_gender) : # 검색어가 있다면 데이터 필터링
+        for d in data:
+            if (is_name_match(search_name, d['Name']) and
+                is_gender_match(search_gender, d['Gender'])) :
+                filtered_data.append(d)
+                match = [0 for _ in range(len(d['Name']))] # match되는 부분을 저장할 list
+                if (search_name) :
+                    for i in range(len(d['Name'])-len(search_name)+1):
+                        if d['Name'][i:i+len(search_name)] == search_name:
+                            # match하면 1, 아니면 0으로 남아있음
+                            match[i:i+len(search_name)] = [1 for _ in range(i, i+len(search_name))]
+                highlighted.append(match)
+    else : # 없으면 원래 데이터
+        filtered_data = data
     return filtered_data, highlighted
 
 def is_name_match(search_name, data_name):
@@ -34,7 +37,9 @@ def is_name_match(search_name, data_name):
     return False
 
 def is_gender_match(search_gender, data_gender):
-    if (search_gender.lower() in data_gender.lower()):
+    if not search_gender:
+        return True
+    elif (search_gender.lower() == data_gender.lower()):
         return True
     return False
 
@@ -58,12 +63,17 @@ def user():
     search_name = request.args.get('name', default="", type=str)
     search_gender = request.args.get('gender', default="", type=str)
 
-    data = get_data_from_file('src/user.csv')
+    keywords = ''
+    keywords += "&name=" + search_name
+    keywords += "&gender=" + search_gender
+
+    data = get_data_from_file('src/user.csv') # 데이터 불러오기
     final_data, highlighted = filter_data(data, search_name, search_gender)
     total_pages, start_index, end_index =  get_pages_indexes(len(final_data), page)
 
-    return render_template("users.html", users=final_data[start_index:end_index], total_pages=total_pages, page=page, 
-                           search_name=search_name, search_gender=search_gender, highlighted=highlighted[start_index:end_index])
+    return render_template("users.html", users=final_data[start_index:end_index], highlighted=highlighted[start_index:end_index],
+                           total_pages=total_pages, page=page, 
+                           keywords=keywords, search_name=search_name)
 
 @app.route("/user_detail/<userid>")
 def user_detail(userid):
@@ -79,12 +89,7 @@ def user_detail(userid):
 
 @app.route("/stores")
 def store():
-    stores = []
-    with open('src/store.csv', newline='', encoding="utf-8") as store:
-        reader = csv.DictReader(store, skipinitialspace=True)
-        next(reader)
-        for row in reader:
-            stores.append(row)
+    stores = get_data_from_file('src/store.csv')
     return render_template("stores.html", stores=stores)
 
 @app.route("/store_detail/<storeid>")

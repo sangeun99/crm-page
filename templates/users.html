@@ -117,29 +117,29 @@
         {% if page > 10 %}
         <li>
           <a class="prev-prev paging"
-            href="/users/?page={{page-10}}&name={{search_name}}&gender={{search_gender}}">&lt;&lt;</a>
+            href="/users/?page={{page-10}}{{keywords}}">&lt;&lt;</a>
         </li>
         {% endif %}
         {% if page > 1 %}
         <li>
-          <a class="prev paging" href="/users/?page={{page-1}}&name={{search_name}}&gender={{search_gender}}">&lt;</a>
+          <a class="prev paging" href="/users/?page={{page-1}}{{keywords}}">&lt;</a>
         </li>
         {% endif %}
         {% for i in range(((page-1)//10)*10+1, [((page-1)//10)*10+11, total_pages+1]|min ) %}
         <li>
           <a class="paging {% if i == page %} current {% endif %}"
-            href="/users/?page={{i}}&name={{search_name}}&gender={{search_gender}}">{{ i }}</a>
+            href="/users/?page={{i}}{{keywords}}">{{ i }}</a>
         </li>
         {% endfor %}
         {% if total_pages > page %}
         <li>
-          <a class="next paging" href="/users/?page={{page+1}}&name={{search_name}}&gender={{search_gender}}">&gt;</a>
+          <a class="next paging" href="/users/?page={{page+1}}{{keywords}}">&gt;</a>
         </li>
         {% endif %}
         {% if total_pages >= page+10 %}
         <li>
           <a class="next-next paging"
-            href="/users/?page={{page+10}}&name={{search_name}}&gender={{search_gender}}">&gt;&gt;</a>
+            href="/users/?page={{page+10}}{{keywords}}">&gt;&gt;</a>
         </li>
         {% endif %}
       </ul>
