@@ -1,16 +1,25 @@
 {% extends 'layout.html' %} {% block content %}
 
-<h2>User {{user_info['Name']}}님</h2>
+{% if model == "user" %}
+<h2>User '{{detail_info['Name']}}'님</h2>
+{% elif model == "store" %}
+<h2>Store '{{detail_info['Name']}}'</h2>
+{% elif model == "order" %}
+<h2>Order Id '{{detail_info['Id']}}'</h2>
+{% elif model == "item" %}
+<h2>Item '{{detail_info['Name']}}'</h2>
+{% endif %}
+
 <table class="info-table">
   <tr class="info-row">
-    {% for key in user_info.keys() %}
+    {% for key in detail_info.keys() %}
     <th class="info-type">
       {{ key }}
     </th>
     {% endfor %}
   </tr>
   <tr class="info-row">
-    {% for value in user_info.values() %}
+    {% for value in detail_info.values() %}
     <td class="info-single-item">
       {{ value }}
     </td>

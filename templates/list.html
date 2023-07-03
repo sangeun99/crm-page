@@ -2,25 +2,28 @@
 
 <table class="info-table">
   <tr class="info-row">
-    {% for key in stores[0].keys() %}
+    {% for key in data[0].keys() %}
     <th class="info-type">
       {{ key }}
     </th>
     {% endfor %}
   </tr>
-  {% for store in stores %}
+  {% for d in data %}
   <tr class="info-row background">
-    {% for key in store.keys() %}
+    {% for key in data[0].keys() %}
     <td class="info-single-item">
       {% if key == 'Id' %}
-      <a class="id-link" href="/store_detail/?store_id={{store[key]}}">{{ store[key] }}</a>
+      <a class="id-link" href="/{{model}}_detail/?id={{d[key]}}">{{ d[key] }}</a>
       {% else %}
-      {{ store[key] }}
+      {{ d[key] }}
       {% endif %}
     </td>
     {% endfor %}
   </tr>
   {% endfor %}
 </table>
+
+{% set keywords = '' %}
+{% include 'pagination.html'%}
 
 {% endblock %}

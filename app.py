@@ -106,12 +106,12 @@ def users():
 
 @app.route("/user_detail/")
 def user_detail():
-    user_id = request.args.get('user_id', default="", type=str)
+    user_id = request.args.get('id', default="", type=str)
 
     users = get_data_from_file('src/user.csv')
     user_info = find_user_detail(users, user_id)
 
-    return render_template("user_detail.html", user_info=user_info)
+    return render_template("detail.html", model="user", detail_info=user_info)
 
 # ============
 #   stores
@@ -119,17 +119,22 @@ def user_detail():
 
 @app.route("/stores/")
 def stores():
+    page = request.args.get('page', default=1, type=int)
+
     stores = get_data_from_file('src/store.csv')
-    return render_template("stores.html", stores=stores)
+    total_pages, start_index, end_index =  get_pages_indexes(len(stores), page)
+
+    return render_template("list.html", model="store", data=stores[start_index:end_index],
+                           total_pages=total_pages, page=page)
 
 @app.route("/store_detail/")
 def store_detail():
-    store_id = request.args.get('store_id', default="", type=str)
+    store_id = request.args.get('id', default="", type=str)
 
     stores = get_data_from_file('src/store.csv')
     store_info = find_store_detail(stores, store_id)
 
-    return render_template("store_detail.html", store_info=store_info)
+    return render_template("detail.html", model="store", detail_info=store_info)
 
 # ============
 #   orders
@@ -137,18 +142,44 @@ def store_detail():
 
 @app.route('/orders/')
 def orders():
+    page = request.args.get('page', default=1, type=int)
+
     orders = get_data_from_file('src/order.csv')
-    print(orders)
-    return render_template("orders.html", orders=orders)
+    total_pages, start_index, end_index =  get_pages_indexes(len(orders), page)
+
+    return render_template("list.html", model="order", data=orders[start_index:end_index],
+                           total_pages=total_pages, page=page)
 
 @app.route('/order_detail/')
 def order_detail():
-    order_id = request.args.get('order_id', default="", type=str)
+    order_id = request.args.get('id', default="", type=str)
     
     orders = get_data_from_file('src/order.csv')
     order_info = find_order_detail(orders, order_id)
 
-    return render_template("order_detail.html", order_info=order_info)
+    return render_template("detail.html", model="order", detail_info=order_info)
+
+# ============
+#   items
+# ============
+@app.route('/items/')
+def items():
+    page = request.args.get('page', default=1, type=int)
+
+    items = get_data_from_file('src/item.csv')
+    total_pages, start_index, end_index =  get_pages_indexes(len(items), page)
+
+    return render_template("list.html", model="item", data=items[start_index:end_index],
+                           total_pages=total_pages, page=page)
+
+@app.route('/item_detail/')
+def item_detail():
+    item_id = request.args.get('id', default="", type=str)
+
+    items = get_data_from_file('src/item.csv')
+    item_info = find_order_detail(items, item_id)
+
+    return render_template("detail.html", model="item", detail_info=item_info)
 
 if __name__=="__main__":
     app.run(port=8080, debug=True)
