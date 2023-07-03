@@ -12,7 +12,7 @@
   <tr class="info-row background">
     {% for key in data[0].keys() %}
     <td class="info-single-item">
-      {% if key == 'Id' %}
+      {% if key == 'id' %}
       <a class="id-link" href="/{{model}}_detail/?id={{d[key]}}">{{ d[key] }}</a>
       {% else %}
       {{ d[key] }}

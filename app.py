@@ -5,8 +5,8 @@ app = Flask(__name__, static_folder="static")
 
 def get_data_from_file(filename):
     data = []
-    with open(filename, newline='', encoding="utf-8") as user:
-        reader = csv.DictReader(user, skipinitialspace=True)
+    with open(filename, newline='', encoding="utf-8") as file:
+        reader = csv.DictReader(file, skipinitialspace=True)
         next(reader)
         for row in reader:
             data.append(row)
@@ -17,14 +17,14 @@ def filter_data(data, search_name="", search_gender="", search_age=0):
     highlighted = []
     if bool(search_name) or bool(search_gender) or bool(search_age) : # 검색어가 있다면 데이터 필터링
         for d in data:
-            if (is_name_match(search_name, d['Name']) and
-                is_gender_match(search_gender, d['Gender']) and
-                is_age_match(search_age, int(d['Age']))) :
+            if (is_name_match(search_name, d['name']) and
+                is_gender_match(search_gender, d['gender']) and
+                is_age_match(search_age, int(d['age']))) :
                 filtered_data.append(d)
-                match = [0 for _ in range(len(d['Name']))] # match되는 부분을 저장할 list
+                match = [0 for _ in range(len(d['name']))] # match되는 부분을 저장할 list
                 if (search_name) :
-                    for i in range(len(d['Name'])-len(search_name)+1):
-                        if d['Name'][i:i+len(search_name)] == search_name:
+                    for i in range(len(d['name'])-len(search_name)+1):
+                        if d['name'][i:i+len(search_name)] == search_name:
                             # match하면 1, 아니면 0으로 남아있음
                             match[i:i+len(search_name)] = [1 for _ in range(i, i+len(search_name))]
                 highlighted.append(match)
@@ -34,22 +34,29 @@ def filter_data(data, search_name="", search_gender="", search_age=0):
 
 def find_user_detail(users, user_id) :
     for user in users:
-        if user['Id'] == user_id :
+        if user['id'] == user_id :
             user_info = user
             return user_info
     return None
             
 def find_store_detail(stores, store_id) :
     for store in stores:
-        if store['Id'] == store_id:
+        if store['id'] == store_id:
             store_info = store
             return store_info
     return None
 
 def find_order_detail(orders, order_id):
     for order in orders:
-        if order['Id'] == order_id:
+        if order['id'] == order_id:
             order_info = order
+            return order_info
+    return None
+
+def find_orderitem_detail(orderitem, orderitem_id):
+    for oi in orderitem:
+        if oi['id'] == orderitem_id:
+            order_info = oi
             return order_info
     return None
 
@@ -72,7 +79,6 @@ def is_age_match(search_age, data_age):
         return True
     else :
         return False
-
 
 def get_pages_indexes(data_length, page):
     per_page = 20
@@ -111,6 +117,7 @@ def user_detail():
     users = get_data_from_file('src/user.csv')
     user_info = find_user_detail(users, user_id)
 
+    print("user",user_info)
     return render_template("detail.html", model="user", detail_info=user_info)
 
 # ============
@@ -158,6 +165,30 @@ def order_detail():
     order_info = find_order_detail(orders, order_id)
 
     return render_template("detail.html", model="order", detail_info=order_info)
+
+
+# ============
+#  orderitems
+# ============
+
+@app.route('/orderitem/')
+def orderitem():
+    page = request.args.get('page', default=1, type=int)
+
+    orderitem = get_data_from_file('src/orderlist.csv')
+    total_pages, start_index, end_index =  get_pages_indexes(len(orderitem), page)
+
+    return render_template("list.html", model="orderitem", data=orderitem[start_index:end_index],
+                           total_pages=total_pages, page=page)
+
+@app.route('/orderitem_detail/')
+def orderitem_detail():
+    orderitem_id = request.args.get('id', default="", type=str)
+    
+    orderitem = get_data_from_file('src/orderlist.csv')
+    orderitem_info = find_orderitem_detail(orderitem, orderitem_id)
+
+    return render_template("detail.html", model="orderitem", detail_info=orderitem_info)
 
 # ============
 #   items
