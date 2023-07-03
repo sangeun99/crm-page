@@ -12,13 +12,14 @@ def get_data_from_file(filename):
             data.append(row)
     return data
 
-def filter_data(data, search_name="", search_gender=""):
+def filter_data(data, search_name="", search_gender="", search_age=0):
     filtered_data = []
     highlighted = []
-    if bool(search_name) or bool(search_gender) : # 검색어가 있다면 데이터 필터링
+    if bool(search_name) or bool(search_gender) or bool(search_age) : # 검색어가 있다면 데이터 필터링
         for d in data:
             if (is_name_match(search_name, d['Name']) and
-                is_gender_match(search_gender, d['Gender'])) :
+                is_gender_match(search_gender, d['Gender']) and
+                is_age_match(search_age, int(d['Age']))) :
                 filtered_data.append(d)
                 match = [0 for _ in range(len(d['Name']))] # match되는 부분을 저장할 list
                 if (search_name) :
@@ -43,6 +44,14 @@ def is_gender_match(search_gender, data_gender):
         return True
     return False
 
+def is_age_match(search_age, data_age):
+    if search_age == 0:
+        return True
+    elif data_age // 10 * 10 == search_age :
+        return True
+    else :
+        return False
+
 def is_everything_match():
     pass
 
@@ -62,18 +71,15 @@ def user():
     page = request.args.get('page', default=1, type=int)
     search_name = request.args.get('name', default="", type=str)
     search_gender = request.args.get('gender', default="", type=str)
-
-    keywords = ''
-    keywords += "&name=" + search_name
-    keywords += "&gender=" + search_gender
+    search_age = request.args.get('age', default=0, type=int)
 
     data = get_data_from_file('src/user.csv') # 데이터 불러오기
-    final_data, highlighted = filter_data(data, search_name, search_gender)
+    final_data, highlighted = filter_data(data, search_name, search_gender, search_age)
     total_pages, start_index, end_index =  get_pages_indexes(len(final_data), page)
 
     return render_template("users.html", users=final_data[start_index:end_index], highlighted=highlighted[start_index:end_index],
                            total_pages=total_pages, page=page, 
-                           keywords=keywords, search_name=search_name)
+                           search_name=search_name, search_gender= search_gender, search_age = search_age)
 
 @app.route("/user_detail/<userid>")
 def user_detail(userid):

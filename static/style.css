@@ -28,7 +28,8 @@
 
 
   --font-main: 'Noto Sans KR', sans-serif;
-
+  
+  --font-size-14: 14px;
   --font-size-16: 16px;
 }
 
@@ -161,7 +162,7 @@ button:hover {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
 }
 
 .search-form {
