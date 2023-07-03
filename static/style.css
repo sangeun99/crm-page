@@ -44,7 +44,7 @@
 
 html {
   font-family: var(--font-main);
-  font-size: var(--font-size-16);
+  font-size: var(--font-size-14);
 }
 
 body {
@@ -113,6 +113,10 @@ body {
 
 .main-container {
   width: 60%;
+}
+
+td > a {
+  color: var(--bs-blue-dark)
 }
 
 button {
@@ -227,13 +231,9 @@ button:hover {
   padding: 10px 20px;
 }
 
-.info-row:hover{
+.info-row.background:hover{
   background-color: var(--bs-blue-light);
   cursor: pointer;
-}
-
-.info-row.no-background:hover{
-  background-color: #fff;
 }
 
 .info-single-item {

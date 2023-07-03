@@ -1,0 +1,37 @@
+{% extends 'layout.html' %} {% block content %}
+
+<!-- 
+==================
+      table
+==================
+-->
+
+{% if orders %}
+<table class="info-table">
+  <thead>
+    <tr class="info-row">
+      {% for key in orders[0].keys() %}
+      <th class="info-type">
+        {{ key }}
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr class="info-row background">
+      {% for key in order.keys() %}
+      <td class="info-single-item">
+        {% if key == 'Id' %}
+        <a class="id-link" href="/order_detail/?order_id={{order[key]}}" +>{{ order[key] }}</a>
+        {% else %}
+        {{ order[key] }}
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

@@ -9,11 +9,11 @@
     {% endfor %}
   </tr>
   {% for store in stores %}
-  <tr class="info-row">
+  <tr class="info-row background">
     {% for key in store.keys() %}
     <td class="info-single-item">
       {% if key == 'Id' %}
-      <a class="id-link" href="/store_detail/{{store[key]}}">{{ store[key] }}</a>
+      <a class="id-link" href="/store_detail/?store_id={{store[key]}}">{{ store[key] }}</a>
       {% else %}
       {{ store[key] }}
       {% endif %}

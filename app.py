@@ -32,6 +32,27 @@ def filter_data(data, search_name="", search_gender="", search_age=0):
         filtered_data = data
     return filtered_data, highlighted
 
+def find_user_detail(users, user_id) :
+    for user in users:
+        if user['Id'] == user_id :
+            user_info = user
+            return user_info
+    return None
+            
+def find_store_detail(stores, store_id) :
+    for store in stores:
+        if store['Id'] == store_id:
+            store_info = store
+            return store_info
+    return None
+
+def find_order_detail(orders, order_id):
+    for order in orders:
+        if order['Id'] == order_id:
+            order_info = order
+            return order_info
+    return None
+
 def is_name_match(search_name, data_name):
     if (search_name in data_name) :
         return True
@@ -52,8 +73,6 @@ def is_age_match(search_age, data_age):
     else :
         return False
 
-def is_everything_match():
-    pass
 
 def get_pages_indexes(data_length, page):
     per_page = 20
@@ -66,8 +85,12 @@ def get_pages_indexes(data_length, page):
 def root():
     return render_template('index.html')
 
+# ============
+#   users
+# ============
+
 @app.route("/users/")
-def user():
+def users():
     page = request.args.get('page', default=1, type=int)
     search_name = request.args.get('name', default="", type=str)
     search_gender = request.args.get('gender', default="", type=str)
@@ -81,33 +104,51 @@ def user():
                            total_pages=total_pages, page=page, 
                            search_name=search_name, search_gender= search_gender, search_age = search_age)
 
-@app.route("/user_detail/<userid>")
-def user_detail(userid):
-    users = []
-    with open('src/user.csv', newline='', encoding="utf-8") as user:
-        reader = csv.DictReader(user, skipinitialspace=True)
-        next(reader)
-        for row in reader:
-            if row['Id'] == userid :
-                userinfo = row
-                break
-    return render_template("user_detail.html", userinfo=userinfo)
+@app.route("/user_detail/")
+def user_detail():
+    user_id = request.args.get('user_id', default="", type=str)
 
-@app.route("/stores")
-def store():
+    users = get_data_from_file('src/user.csv')
+    user_info = find_user_detail(users, user_id)
+
+    return render_template("user_detail.html", user_info=user_info)
+
+# ============
+#   stores
+# ============
+
+@app.route("/stores/")
+def stores():
     stores = get_data_from_file('src/store.csv')
     return render_template("stores.html", stores=stores)
 
-@app.route("/store_detail/<storeid>")
-def store_detail(storeid):
-    with open('src/store.csv', newline='', encoding="utf-8") as store:
-        reader = csv.DictReader(store, skipinitialspace=True)
-        next(reader)
-        for row in reader:
-            if row['Id'] == storeid :
-                storeinfo = row
-                break
-    return render_template("store_detail.html", storeinfo=storeinfo)
+@app.route("/store_detail/")
+def store_detail():
+    store_id = request.args.get('store_id', default="", type=str)
+
+    stores = get_data_from_file('src/store.csv')
+    store_info = find_store_detail(stores, store_id)
+
+    return render_template("store_detail.html", store_info=store_info)
+
+# ============
+#   orders
+# ============
+
+@app.route('/orders/')
+def orders():
+    orders = get_data_from_file('src/order.csv')
+    print(orders)
+    return render_template("orders.html", orders=orders)
+
+@app.route('/order_detail/')
+def order_detail():
+    order_id = request.args.get('order_id', default="", type=str)
+    
+    orders = get_data_from_file('src/order.csv')
+    order_info = find_order_detail(orders, order_id)
+
+    return render_template("order_detail.html", order_info=order_info)
 
 if __name__=="__main__":
     app.run(port=8080, debug=True)

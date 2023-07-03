@@ -1,0 +1,25 @@
+{% extends 'layout.html' %} {% block content %}
+
+<table class="info-table">
+  <thead>
+    <tr class="info-row">
+      {% for key in order_info.keys() %}
+      <th class="info-type">
+        {{ key }}
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="info-row">
+      {% for value in order_info.values() %}
+      <td class="info-single-item">
+        {{ value }}
+      </td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+
+{% endblock %}

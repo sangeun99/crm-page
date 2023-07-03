@@ -53,8 +53,8 @@
   </thead>
   <tbody>
     {% for i in range(users|length) %}
-    {% set userDetatilURL ='/user_detail/' + users[i]['Id'] %}
-    <tr class="info-row" onclick="window.location.href='{{userDetatilURL}}'">
+    {% set userDetatilURL ='/user_detail/?user_id=' + users[i]['Id'] %}
+    <tr class="info-row background" onclick="window.location.href='{{userDetatilURL}}'">
       {% for key in users[i].keys() %}
       {% if key != 'Id' %}
       <td class="info-single-item">

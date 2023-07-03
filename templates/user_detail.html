@@ -1,16 +1,16 @@
 {% extends 'layout.html' %} {% block content %}
 
-<h2>User {{userinfo['Name']}}님</h2>
+<h2>User {{user_info['Name']}}님</h2>
 <table class="info-table">
   <tr class="info-row">
-    {% for key in userinfo.keys() %}
+    {% for key in user_info.keys() %}
     <th class="info-type">
       {{ key }}
     </th>
     {% endfor %}
   </tr>
-  <tr class="info-row no-background">
-    {% for value in userinfo.values() %}
+  <tr class="info-row">
+    {% for value in user_info.values() %}
     <td class="info-single-item">
       {{ value }}
     </td>
