@@ -1,56 +1,26 @@
-<!DOCTYPE html>
-<html lang="ko">
+{% extends 'layout.html' %} {% block content %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STORE DETAIL - CRM</title>
-  <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-</head>
+<table class="info-table">
+  <tr class="info-row">
+    {% for key in stores[0].keys() %}
+    <th class="info-type">
+      {{ key }}
+    </th>
+    {% endfor %}
+  </tr>
+  {% for store in stores %}
+  <tr class="info-row">
+    {% for key in store.keys() %}
+    <td class="info-single-item">
+      {% if key == 'Id' %}
+      <a class="id-link" href="/store_detail/{{store[key]}}">{{ store[key] }}</a>
+      {% else %}
+      {{ store[key] }}
+      {% endif %}
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
 
-<body>
-  <div class="main-container">
-    <nav>
-      <ul class="menu">
-        <li class="menu-list">
-          <a href="/users">User</a>
-        </li>
-        <li class="menu-list">
-          <a href="/order">Order</a>
-        </li>
-        <li class="menu-list">
-          <a href="/orderitem">Order Item</a>
-        </li>
-        <li class="menu-list">
-          <a href="/item">Item</a>
-        </li>
-        <li class="menu-list">
-          <a href="/stores">Store</a>
-        </li>
-      </ul>
-    </nav>
-    <table class="info-table">
-      <tr class="info-row">
-        {% for key in stores[0].keys() %}
-        <th class="info-type">
-          {{ key }}
-        </th>
-        {% endfor %}
-      </tr>
-      {% for store in stores %}
-      <tr class="info-row">
-        {% for key in store.keys() %}
-        <td class="info-single-item">
-          {% if key == 'Id' %}
-          <a class="id-link" href="/store_detail/{{store[key]}}">{{ store[key] }}</a>
-          {% else %}
-          {{ store[key] }}
-          {% endif %}
-        </td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
-</body>
-</html>
+{% endblock %}

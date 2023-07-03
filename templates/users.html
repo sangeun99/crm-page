@@ -1,181 +1,88 @@
-<!DOCTYPE html>
-<html lang="ko">
+{% extends 'layout.html' %} {% block content %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>USERS - CRM</title>
-  <link href='{{url_for("static", filename="style.css")}}' rel="stylesheet">
-  <style>
-    .filter {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding-bottom: 20px;
-    }
+<!-- 
+==================
+    search bar
+==================
+-->
 
-    .filter-age {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 40px;
-      height: 30px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
-
-    .current.filter-age {
-      background-color: var(--primary);
-      color: var(--white)
-    }
-    
-    .filter-age:not(.current):hover {
-      background-color: var(--bs-blue-light);
-    }
-
-  </style>
-</head>
-
-<body>
-  <div class="main-container">
-    <!-- 
-    ==================
-          menu bar
-    ==================
-    -->
-    <nav>
-      <ul class="menu">
-        <li class="menu-list">
-          <a href="/users">User</a>
-        </li>
-        <li class="menu-list">
-          <a href="/order">Order</a>
-        </li>
-        <li class="menu-list">
-          <a href="/orderitem">Order Item</a>
-        </li>
-        <li class="menu-list">
-          <a href="/item">Item</a>
-        </li>
-        <li class="menu-list">
-          <a href="/stores">Store</a>
-        </li>
-      </ul>
-    </nav>
-
-    <!-- 
-    ==================
-        search bar
-    ==================
-    -->
-    <div class="search">
-      <form class="search-form" action="/users/" method="GET">
-        <div>
-          <label for="name">Name :</label>
-          <input name="name" class="input-form" type="text" value="{{search_name}}" size="5" />
-        </div>
-        <div>
-          <label for="gender">Gender :</label>
-          <select name="gender" class="input-form">
-            <option value=""></option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-          </select>
-        </div>
-        <button type="submit">검색</button>
-      </form>
+<div class="search">
+  <form class="search-form" action="/users/" method="GET">
+    <div>
+      <label for="name">Name :</label>
+      <input name="name" class="input-form" type="text" value="{{search_name}}" size="5" />
     </div>
-    <div class="filter">
-      <a class="filter-age" href="/users/?&name={{search_name}}&gender={{search_gender}}&age=0">전체</a>
-      {% for i in range(10, 60, 10) %}
-      <a class="filter-age {% if i == search_age %} current {% endif %}" href="/users/?&name={{search_name}}&gender={{search_gender}}&age={{i}}">
-        {{i}}대</a>
+    <div>
+      <label for="gender">Gender :</label>
+      <select name="gender" class="input-form">
+        <option value=""></option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+      </select>
+    </div>
+    <button type="submit">검색</button>
+  </form>
+</div>
+<div class="filter">
+  <a class="filter-age" href="/users/?&name={{search_name}}&gender={{search_gender}}&age=0">전체</a>
+  {% for i in range(10, 60, 10) %}
+  <a class="filter-age {% if i == search_age %} current {% endif %}"
+    href="/users/?&name={{search_name}}&gender={{search_gender}}&age={{i}}">
+    {{i}}대</a>
+  {% endfor %}
+</div>
+
+<!-- 
+==================
+      table
+==================
+-->
+
+{% if users %}
+<table class="info-table">
+  <thead>
+    <tr class="info-row">
+      {% for key in users[0].keys() %}
+      {% if key != 'Id' %}
+      <th class="info-type">
+        {{ key }}
+      </th>
+      {% endif %}
       {% endfor %}
-    </div>
-    <!-- 
-    ==================
-          table
-    ==================
-    -->
-
-    {% if users %}
-    <table class="info-table">
-      <thead>
-        <tr class="info-row">
-          {% for key in users[0].keys() %}
-          {% if key != 'Id' %}
-          <th class="info-type">
-            {{ key }}
-          </th>
-          {% endif %}
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for i in range(users|length) %}
-        {% set userDetatilURL ='/user_detail/' + users[i]['Id'] %}
-        <tr class="info-row" onclick="window.location.href='{{userDetatilURL}}'">
-          {% for key in users[i].keys() %}
-          {% if key != 'Id' %}
-          <td class="info-single-item">
-            {% if key == 'Name' and search_name %}
-            {% for c in range(users[i]['Name']|length) %}<!-- 
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in range(users|length) %}
+    {% set userDetatilURL ='/user_detail/' + users[i]['Id'] %}
+    <tr class="info-row" onclick="window.location.href='{{userDetatilURL}}'">
+      {% for key in users[i].keys() %}
+      {% if key != 'Id' %}
+      <td class="info-single-item">
+        {% if key == 'Name' and search_name %}
+        {% for c in range(users[i]['Name']|length) %}<!-- 
             -->{% if highlighted[i][c] == 1 %}<!-- 
             --><span class="highlighted">{{users[i]['Name'][c]}}</span><!-- 
             -->{% else %}<!-- 
             --><span>{{users[i]['Name'][c]}}</span><!-- 
             -->{% endif %}<!-- 
             -->{% endfor %}
-            {% else %}
-            {{users[i][key]}}
-            {% endif %}
-          </td>
-          {% endif %}
-          {% endfor %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+        {% else %}
+        {{users[i][key]}}
+        {% endif %}
+      </td>
+      {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
 
-    <!-- 
-    ==================
-        pagination
-    ==================
-    -->
-    <div class="pagination">
-      <ul class="paging-bar">
-        {% if page > 10 %}
-        <li>
-          <a class="prev-prev paging"
-            href="/users/?page={{page-10}}&name={{search_name}}&gender={{search_gender}}&age={{search_age}}">&lt;&lt;</a>
-        </li>
-        {% endif %}
-        {% if page > 1 %}
-        <li>
-          <a class="prev paging" href="/users/?page={{page-1}}&name={{search_name}}&gender={{search_gender}}&age={{search_age}}">&lt;</a>
-        </li>
-        {% endif %}
-        {% for i in range(((page-1)//10)*10+1, [((page-1)//10)*10+11, total_pages+1]|min ) %}
-        <li>
-          <a class="paging {% if i == page %} current {% endif %}"
-            href="/users/?page={{i}}&name={{search_name}}&gender={{search_gender}}&age={{search_age}}">{{ i }}</a>
-        </li>
-        {% endfor %}
-        {% if total_pages > page %}
-        <li>
-          <a class="next paging" href="/users/?page={{page+1}}&name={{search_name}}&gender={{search_gender}}&age={{search_age}}">&gt;</a>
-        </li>
-        {% endif %}
-        {% if total_pages >= page+10 %}
-        <li>
-          <a class="next-next paging"
-            href="/users/?page={{page+10}}&name={{search_name}}&gender={{search_gender}}&age={{search_age}}">&gt;&gt;</a>
-        </li>
-        {% endif %}
-      </ul>
-    </div>
-  </div>
-</body>
-
-</html>
+<!-- 
+==================
+    pagination
+==================
+-->
+{% set keywords = "&name="+ search_name + "&gender=" + search_gender + "&age=" + search_age|string %}
+{% include "pagination.html" %}
+{% endblock %}
