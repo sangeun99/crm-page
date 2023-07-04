@@ -1,0 +1,36 @@
+{% extends 'common/base.html' %}
+
+{% block title%}
+Register
+{% endblock %}
+
+{% block content %}
+<div class="sub-menu">
+  <a href="/register/user" class="filter">사용자 등록하기</a>
+  <a href="/register/store" class="filter">상점 등록하기</a>
+  <a href="/register/item" class="filter">상품 등록하기</a>
+</div>
+
+<form action="/register/store" method="POST">
+  <div>
+    <label for="storetype">Type :</label>
+    <select name="storetype">
+      <option value="스타벅스">스타벅스</option>
+      <option value="투썸">투썸</option>
+      <option value="커피빈">커피빈</option>
+      <option value="이디야">이디야</option>
+      <option value="할리스">할리스</option>
+    </select>
+  </div>
+  <div>
+    <label for="storelocation">location :</label>
+    <input name="storelocation" type="text" placeholder="name" required>
+  </div>
+
+  <div>
+    <label for="address">Address :</label>
+    <input name="address" type="text" placeholder="address" required>
+  </div>
+  <button type="submit">추가</button>
+</form>
+{% endblock %}

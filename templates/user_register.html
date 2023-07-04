@@ -1,0 +1,36 @@
+{% extends 'common/base.html' %}
+
+{% block title%}
+Register
+{% endblock %}
+
+{% block content %}
+<div class="sub-menu">
+  <a href="/register/user" class="filter">사용자 등록하기</a>
+  <a href="/register/store" class="filter">상점 등록하기</a>
+  <a href="/register/item" class="filter">상품 등록하기</a>
+</div>
+
+<form action="/register/user" method="POST">
+  <div>
+    <label for="name">Name :</label>
+    <input name="name" type="text" placeholder="name" required>
+  </div>
+  <div>
+    <label for="gender">Gender :</label>
+    <select name="gender">
+      <option value="Female">Female</option>
+      <option value="Male">Male</option>
+    </select>
+  </div>
+  <div>
+    <label for="birthdate">Birthdate :</label>
+    <input name="birthdate" type="date" required>
+  </div>
+  <div>
+    <label for="address">Address :</label>
+    <input name="address" type="text" placeholder="address" required>
+  </div>
+  <button type="submit">추가</button>
+</form>
+{% endblock %}

@@ -185,14 +185,14 @@ button:hover {
 ==================
 */
 
-.filter {
+.sub-menu {
   display: flex;
   justify-content: center;
   gap: 20px;
   padding-bottom: 20px;
 }
 
-.filter-age {
+.filter {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -202,12 +202,12 @@ button:hover {
   font-size: 14px;
 }
 
-.current.filter-age {
+.selected.filter {
   background-color: var(--primary);
   color: var(--white)
 }
 
-.filter-age:not(.current):hover {
+.filter:not(.current):hover {
   background-color: var(--bs-blue-light);
 }
 
