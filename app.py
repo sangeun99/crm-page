@@ -89,7 +89,7 @@ def get_pages_indexes(data_length, page):
 
 @app.route("/")
 def root():
-    return render_template('index.html')
+    return render_template('home.html')
 
 # ============
 #   users
@@ -118,7 +118,7 @@ def user_detail():
     user_info = find_user_detail(users, user_id)
 
     print("user",user_info)
-    return render_template("detail.html", model="user", detail_info=user_info)
+    return render_template("common/detail.html", model="user", detail_info=user_info)
 
 # ============
 #   stores
@@ -131,7 +131,7 @@ def stores():
     stores = get_data_from_file('src/store.csv')
     total_pages, start_index, end_index =  get_pages_indexes(len(stores), page)
 
-    return render_template("list.html", model="store", data=stores[start_index:end_index],
+    return render_template("common/list.html", model="store", data=stores[start_index:end_index],
                            total_pages=total_pages, page=page)
 
 @app.route("/store_detail/")
@@ -141,7 +141,7 @@ def store_detail():
     stores = get_data_from_file('src/store.csv')
     store_info = find_store_detail(stores, store_id)
 
-    return render_template("detail.html", model="store", detail_info=store_info)
+    return render_template("common/detail.html", model="store", detail_info=store_info)
 
 # ============
 #   orders
@@ -154,7 +154,7 @@ def orders():
     orders = get_data_from_file('src/order.csv')
     total_pages, start_index, end_index =  get_pages_indexes(len(orders), page)
 
-    return render_template("list.html", model="order", data=orders[start_index:end_index],
+    return render_template("common/list.html", model="order", data=orders[start_index:end_index],
                            total_pages=total_pages, page=page)
 
 @app.route('/order_detail/')
@@ -164,7 +164,7 @@ def order_detail():
     orders = get_data_from_file('src/order.csv')
     order_info = find_order_detail(orders, order_id)
 
-    return render_template("detail.html", model="order", detail_info=order_info)
+    return render_template("common/detail.html", model="order", detail_info=order_info)
 
 
 # ============
@@ -178,7 +178,7 @@ def orderitem():
     orderitem = get_data_from_file('src/orderlist.csv')
     total_pages, start_index, end_index =  get_pages_indexes(len(orderitem), page)
 
-    return render_template("list.html", model="orderitem", data=orderitem[start_index:end_index],
+    return render_template("common/list.html", model="orderitem", data=orderitem[start_index:end_index],
                            total_pages=total_pages, page=page)
 
 @app.route('/orderitem_detail/')
@@ -188,7 +188,7 @@ def orderitem_detail():
     orderitem = get_data_from_file('src/orderlist.csv')
     orderitem_info = find_orderitem_detail(orderitem, orderitem_id)
 
-    return render_template("detail.html", model="orderitem", detail_info=orderitem_info)
+    return render_template("common/detail.html", model="orderitem", detail_info=orderitem_info)
 
 # ============
 #   items
@@ -200,7 +200,7 @@ def items():
     items = get_data_from_file('src/item.csv')
     total_pages, start_index, end_index =  get_pages_indexes(len(items), page)
 
-    return render_template("list.html", model="item", data=items[start_index:end_index],
+    return render_template("common/list.html", model="item", data=items[start_index:end_index],
                            total_pages=total_pages, page=page)
 
 @app.route('/item_detail/')
@@ -210,7 +210,7 @@ def item_detail():
     items = get_data_from_file('src/item.csv')
     item_info = find_order_detail(items, item_id)
 
-    return render_template("detail.html", model="item", detail_info=item_info)
+    return render_template("common/detail.html", model="item", detail_info=item_info)
 
 if __name__=="__main__":
-    app.run(port=8080, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
