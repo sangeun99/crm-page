@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>USERS - CRM</title>
+  <title>{% block title%} {% endblock %}</title>
   <link href='{{url_for("static", filename="style.css")}}' rel="stylesheet">
   <style></style>
 </head>
@@ -16,7 +16,7 @@
           menu bar
     ==================
     -->
-    {% include "menu.html" %}
+    {% include "common/menu.html" %}
 
     {% block content %}
     <!-- 

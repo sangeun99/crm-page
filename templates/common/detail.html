@@ -1,4 +1,10 @@
-{% extends 'layout.html' %} {% block content %}
+{% extends 'common/base.html' %}
+
+{% block title%}
+CRM - {{model}}
+{% endblock %}
+
+{% block content %}
 
 {% if model == "user" %}
 <h2>User '{{detail_info['name']}}'님</h2>

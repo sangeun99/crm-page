@@ -1,4 +1,11 @@
-{% extends 'layout.html' %} {% block content %}
+{% extends 'common/base.html' %} 
+
+{% block title%}
+CRM - USERS
+{% endblock %}
+
+
+{% block content %}
 
 <!-- 
 ==================
@@ -15,9 +22,9 @@
     <div>
       <label for="gender">Gender :</label>
       <select name="gender" class="input-form">
-        <option value=""></option>
-        <option value="female">Female</option>
-        <option value="male">Male</option>
+        <option value="" ></option>
+        <option value="female" {% if search_gender == "female"%} selected {% endif %}>Female</option>
+        <option value="male" {% if search_gender == "male" %} selected {% endif %}>Male</option>
       </select>
     </div>
     <button type="submit">검색</button>
@@ -85,5 +92,5 @@
 -->
 
 {% set keywords = "&name="+ search_name + "&gender=" + search_gender + "&age=" + search_age|string %}
-{% include "pagination.html" %}
+{% include "common/pagination.html" %}
 {% endblock %}
