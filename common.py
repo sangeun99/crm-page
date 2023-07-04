@@ -11,7 +11,7 @@ def get_data_from_file(filename):
 
 def get_pages_indexes(data_length, page):
     per_page = 20
-    total_pages = data_length // per_page + 1
+    total_pages = (data_length - 1) // per_page + 1
     start_index = (page - 1) * per_page
     end_index = page * per_page
     return total_pages, start_index, end_index
