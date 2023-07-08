@@ -1,8 +1,11 @@
 from flask import Blueprint, request, render_template
-from common import get_data_from_file, get_pages_indexes
+
+from routes.common import get_data_from_file, get_pages_indexes, get_results
+
 
 user_bp = Blueprint('user', __name__)
 
+# 프론트에서 처리
 def filter_data(data, search_name="", search_gender="", search_age=0):
     filtered_data = []
     highlighted = []
@@ -21,6 +24,7 @@ def filter_data(data, search_name="", search_gender="", search_age=0):
                 highlighted.append(match)
     else : # 없으면 원래 데이터
         filtered_data = data
+    print(highlighted)
     return filtered_data, highlighted
 
 def find_user_detail(users, user_id) :
@@ -49,6 +53,8 @@ def is_age_match(search_age, data_age):
         return True
     else :
         return False
+    
+# 폴더 안에 user util user routes
 
 @user_bp.route("/users/")
 def users():

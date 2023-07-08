@@ -1,15 +1,17 @@
+import csv
 from flask import Flask, render_template, request
-from user import user_bp
-from order import order_bp
-from orderitem import orderitem_bp
-from item import item_bp
-from store import store_bp
+
+from routes.user import user_bp
+from routes.order import order_bp
+from routes.orderitem import orderitem_bp
+from routes.item import item_bp
+from routes.store import store_bp
+# from common import get_results
 
 from models.user import User
 from models.store import Store
 from models.item import Item
 
-import csv
 
 app = Flask(__name__, static_folder="static")
 
@@ -18,6 +20,15 @@ app.register_blueprint(order_bp)
 app.register_blueprint(orderitem_bp)
 app.register_blueprint(item_bp)
 app.register_blueprint(store_bp)
+
+# @app.route('/test')
+# def root():
+#     result = get_results("select * from users")
+#     # result = get_results("select * from users where name = ?", ["김아린"])
+#     for row in result :
+#         print(row['id'])
+#         print(row['name'], 'has id', row['id'])
+#     return "complete"
 
 @app.route("/")
 def root():

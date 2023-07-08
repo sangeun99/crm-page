@@ -1,5 +1,7 @@
 from flask import Blueprint, request, render_template
-from common import get_data_from_file, get_pages_indexes
+
+from routes.common import get_data_from_file, get_pages_indexes, get_results
+
 
 item_bp = Blueprint('item', __name__)
 

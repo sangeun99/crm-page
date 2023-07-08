@@ -1,5 +1,7 @@
 import datetime
+
 from models.id import Id
+
 
 class User:
     def __init__(self, name, gender, birthdate, address) :
