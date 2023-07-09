@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 
-from routes.common import get_data_from_file, get_pages_indexes, get_results
-
+from view.common import get_data_from_file, get_pages_indexes, get_results, write_csv
+from models.store import Store
 
 store_bp = Blueprint('store', __name__)
             
@@ -30,3 +30,13 @@ def store_detail():
     store_info = find_store_detail(stores, store_id)
 
     return render_template("common/detail.html", model="store", detail_info=store_info)
+
+@store_bp.route("/store/register", methods=['GET', 'POST'])
+def store_register():
+    if request.method == 'POST':
+        get = request.form
+        store = Store(get['storetype'], get['storelocation'], get['address']).generate()
+        fieldnames = ['id', 'name', 'type', 'address']
+        write_csv('src/store.csv', fieldnames, store)
+        return render_template('register_complete.html', data=store)
+    return render_template('store_register.html')

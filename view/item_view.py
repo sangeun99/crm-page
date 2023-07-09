@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 
-from routes.common import get_data_from_file, get_pages_indexes, get_results
-
+from view.common import get_data_from_file, get_pages_indexes, get_results, write_csv
+from models.item import Item
 
 item_bp = Blueprint('item', __name__)
 
@@ -30,3 +30,13 @@ def item_detail():
     item_info = find_item_detail(items, item_id)
 
     return render_template("common/detail.html", model="item", detail_info=item_info)
+
+@item_bp.route("/item/register", methods=['GET', 'POST'])
+def item_register():
+    if request.method == 'POST':
+        get = request.form
+        item = Item(get['itemname'], get['itemtype'], get['unitprice']).generate()
+        fieldnames = ['id', 'name', 'type', 'unitprice']
+        write_csv('src/item.csv', fieldnames, item)
+        return render_template('register_complete.html', data=item)
+    return render_template('item_register.html')

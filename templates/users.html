@@ -49,7 +49,7 @@ CRM - USERS
   <thead>
     <tr class="info-row">
       {% for key in users[0].keys() %}
-      {% if key != 'id' %}
+      {% if key != 'Id' %}
       <th class="info-type">
         {{ key }}
       </th>
@@ -59,17 +59,17 @@ CRM - USERS
   </thead>
   <tbody>
     {% for i in range(users|length) %}
-    {% set userDetatilURL ='/user_detail/?id=' + users[i]['id'] %}
+    {% set userDetatilURL ='/user_detail/?id=' + users[i]['Id'] %}
     <tr class="info-row background" onclick="window.location.href='{{userDetatilURL}}'">
       {% for key in users[i].keys() %}
-      {% if key != 'id' %}
+      {% if key != 'Id' %}
       <td class="info-single-item">
-        {% if key == 'name' and search_name %}
-        {% for c in range(users[i]['name']|length) %}<!-- 
+        {% if key == 'Name' and search_name %}
+        {% for c in range(users[i]['Name']|length) %}<!-- 
             -->{% if highlighted[i][c] == 1 %}<!-- 
-            --><span class="highlighted">{{users[i]['name'][c]}}</span><!-- 
+            --><span class="highlighted">{{users[i]['Name'][c]}}</span><!-- 
             -->{% else %}<!-- 
-            --><span>{{users[i]['name'][c]}}</span><!-- 
+            --><span>{{users[i]['Name'][c]}}</span><!-- 
             -->{% endif %}<!-- 
             -->{% endfor %}
         {% else %}

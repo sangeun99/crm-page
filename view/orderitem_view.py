@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 
-from routes.common import get_data_from_file, get_pages_indexes, get_results
+from view.common import get_data_from_file, get_pages_indexes, get_results
 
 
 orderitem_bp = Blueprint('orderitem', __name__)

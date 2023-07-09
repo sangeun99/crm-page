@@ -1,30 +1,30 @@
 from flask import Blueprint, request, render_template
 
-from routes.common import get_data_from_file, get_pages_indexes, get_results
+from models.user import User
+from view.common import get_column, get_data_from_file, get_pages_indexes, get_results, write_csv
 
 
 user_bp = Blueprint('user', __name__)
 
-# 프론트에서 처리
+# TODO: 프론트에서 처리
 def filter_data(data, search_name="", search_gender="", search_age=0):
     filtered_data = []
     highlighted = []
     if bool(search_name) or bool(search_gender) or bool(search_age) : # 검색어가 있다면 데이터 필터링
         for d in data:
-            if (is_name_match(search_name, d['name']) and
-                is_gender_match(search_gender, d['gender']) and
-                is_age_match(search_age, int(d['age']))) :
+            if (is_name_match(search_name, d['Name']) and
+                is_gender_match(search_gender, d['Gender']) and
+                is_age_match(search_age, int(d['Age']))) :
                 filtered_data.append(d)
-                match = [0 for _ in range(len(d['name']))] # match되는 부분을 저장할 list
+                match = [0 for _ in range(len(d['Name']))] # match되는 부분을 저장할 list
                 if (search_name) :
-                    for i in range(len(d['name'])-len(search_name)+1):
-                        if d['name'][i:i+len(search_name)] == search_name:
+                    for i in range(len(d['Name'])-len(search_name)+1):
+                        if d['Name'][i:i+len(search_name)] == search_name:
                             # match하면 1, 아니면 0으로 남아있음
                             match[i:i+len(search_name)] = [1 for _ in range(i, i+len(search_name))]
                 highlighted.append(match)
     else : # 없으면 원래 데이터
         filtered_data = data
-    print(highlighted)
     return filtered_data, highlighted
 
 def find_user_detail(users, user_id) :
@@ -54,7 +54,7 @@ def is_age_match(search_age, data_age):
     else :
         return False
     
-# 폴더 안에 user util user routes
+# TODO: 폴더 안에 user util user routes
 
 @user_bp.route("/users/")
 def users():
@@ -63,7 +63,16 @@ def users():
     search_gender = request.args.get('gender', default="", type=str)
     search_age = request.args.get('age', default=0, type=int)
 
-    data = get_data_from_file('src/user.csv') # 데이터 불러오기
+    # data = get_data_from_file('src/user.csv') # 데이터 불러오기
+    # print(data)
+
+    result = get_results("SELECT * FROM users")
+    keys = get_column("users")
+    data = []
+    for values in result:
+        d = dict(zip(keys, values))
+        data.append(d)
+        
     final_data, highlighted = filter_data(data, search_name, search_gender, search_age)
     total_pages, start_index, end_index =  get_pages_indexes(len(final_data), page)
 
@@ -75,8 +84,27 @@ def users():
 def user_detail():
     user_id = request.args.get('id', default="", type=str)
 
-    users = get_data_from_file('src/user.csv')
-    user_info = find_user_detail(users, user_id)
+    # users = get_data_from_file('src/user.csv')
+    # user_info = find_user_detail(users, user_id)
+
+    
+    result = get_results("SELECT * FROM users WHERE id = ?", user_id)
+    keys = get_column("users")
+
+    for values in result:
+        user_info = dict(zip(keys, values))
+  
+        
 
     print("user",user_info)
     return render_template("common/detail.html", model="user", detail_info=user_info)
+
+@user_bp.route("/user/register", methods=['GET', 'POST'])
+def user_register():
+    if request.method == 'POST':
+        get = request.form
+        user = User(get['Name'], get['Gender'], get['birthdate'], get['address']).generate()
+        fieldnames = ['id', 'Name', 'Gender', 'age', 'birthdate', 'address']
+        write_csv('src/user.csv', fieldnames, user)
+        return render_template('register_complete.html', data=user)
+    return render_template('user_register.html')
