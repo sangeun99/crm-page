@@ -1,22 +1,16 @@
 from flask import Blueprint, request, render_template
 
-from view.common import get_data_from_file, get_pages_indexes, get_results, write_csv
+from view.common import get_pages_indexes, get_results, write_csv, get_one_result
 from models.item import Item
 
-item_bp = Blueprint('item', __name__)
 
-def find_item_detail(items, item_id):
-    for item in items:
-        if item['id'] == item_id:
-            item_info = item
-            return item_info
-    return None
+item_bp = Blueprint('item', __name__)
 
 @item_bp.route('/items/')
 def items():
     page = request.args.get('page', default=1, type=int)
 
-    items = get_data_from_file('src/item.csv')
+    items = get_results('SELECT * FROM items')
     total_pages, start_index, end_index =  get_pages_indexes(len(items), page)
 
     return render_template("common/list.html", model="item", data=items[start_index:end_index],
@@ -26,8 +20,7 @@ def items():
 def item_detail():
     item_id = request.args.get('id', default="", type=str)
 
-    items = get_data_from_file('src/item.csv')
-    item_info = find_item_detail(items, item_id)
+    item_info = get_one_result('SELECT * FROM items WHERE id=?', item_id)
 
     return render_template("common/detail.html", model="item", detail_info=item_info)
 

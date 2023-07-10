@@ -7,6 +7,21 @@ app = Flask(__name__)
 
 DATABASE = 'user-sample.sqlite'
 
+def get_one_result(query, option=""):
+    conn = sqlite3.connect(DATABASE)
+
+    cur = conn.cursor()
+    if option :
+        cur.execute(query, [option])
+    else :
+        cur.execure(query)
+    
+    keys = [column[0] for column in cur.description]
+    value = cur.fetchone()
+
+    data = dict(zip(keys, value))
+
+    return data
 
 def get_results(query, option="") :
     conn = sqlite3.connect(DATABASE)
@@ -17,17 +32,14 @@ def get_results(query, option="") :
         cur.execute(query, [option])
     else :
         cur.execute(query)
+    
+    keys = [column[0] for column in cur.description]
+    values = cur.fetchall() # 레코드 단위로 데이터를 전달받음
 
-    rows = cur.fetchall() # 레코드 단위로 데이터를 전달받음
-    return rows
+    data = [dict(zip(keys, value)) for value in values]
 
-def get_column(table):
-    conn = sqlite3.connect(DATABASE)
-    cur = conn.cursor()
-    cur.execute("SELECT name FROM PRAGMA_TABLE_INFO(?)", [table])
-    col_names = cur.fetchall()
-    col = [name[0] for name in col_names]
-    return col
+    return data
+
 
 def get_data_from_file(filename):
     data = []

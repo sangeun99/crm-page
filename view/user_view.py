@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 
 from models.user import User
-from view.common import get_column, get_data_from_file, get_pages_indexes, get_results, write_csv
+from view.common import get_pages_indexes, get_one_result, get_results, write_csv
 
 
 user_bp = Blueprint('user', __name__)
@@ -26,13 +26,6 @@ def filter_data(data, search_name="", search_gender="", search_age=0):
     else : # 없으면 원래 데이터
         filtered_data = data
     return filtered_data, highlighted
-
-def find_user_detail(users, user_id) :
-    for user in users:
-        if user['id'] == user_id :
-            user_info = user
-            return user_info
-    return None
 
 def is_name_match(search_name, data_name):
     if (search_name in data_name) :
@@ -63,17 +56,9 @@ def users():
     search_gender = request.args.get('gender', default="", type=str)
     search_age = request.args.get('age', default=0, type=int)
 
-    # data = get_data_from_file('src/user.csv') # 데이터 불러오기
-    # print(data)
-
-    result = get_results("SELECT * FROM users")
-    keys = get_column("users")
-    data = []
-    for values in result:
-        d = dict(zip(keys, values))
-        data.append(d)
+    users = get_results("SELECT * FROM users")
         
-    final_data, highlighted = filter_data(data, search_name, search_gender, search_age)
+    final_data, highlighted = filter_data(users, search_name, search_gender, search_age)
     total_pages, start_index, end_index =  get_pages_indexes(len(final_data), page)
 
     return render_template("users.html", users=final_data[start_index:end_index], highlighted=highlighted[start_index:end_index],
@@ -83,20 +68,9 @@ def users():
 @user_bp.route("/user_detail/")
 def user_detail():
     user_id = request.args.get('id', default="", type=str)
-
-    # users = get_data_from_file('src/user.csv')
-    # user_info = find_user_detail(users, user_id)
-
-    
-    result = get_results("SELECT * FROM users WHERE id = ?", user_id)
-    keys = get_column("users")
-
-    for values in result:
-        user_info = dict(zip(keys, values))
-  
         
+    user_info = get_one_result("SELECT * FROM users WHERE id = ?", user_id)
 
-    print("user",user_info)
     return render_template("common/detail.html", model="user", detail_info=user_info)
 
 @user_bp.route("/user/register", methods=['GET', 'POST'])

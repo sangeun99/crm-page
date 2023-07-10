@@ -7,7 +7,7 @@ from view.order_view import order_bp
 from view.orderitem_view import orderitem_bp
 from view.item_view import item_bp
 from view.store_view import store_bp
-from view.common import get_results, get_column
+from view.common import get_results
 
 app = Flask(__name__, static_folder="static")
 
@@ -22,12 +22,8 @@ app.register_blueprint(store_bp)
 @app.route('/test')
 def test():
     result = get_results("SELECT * FROM users WHERE name = ?", "김아린")
-    keys = get_column("users")
-    data = []
-    for values in result:
-        d = dict(zip(keys, values))
-        data.append(d)
-    print(data)
+
+    print(result)
     return "complete1"
 
 @app.route("/")
