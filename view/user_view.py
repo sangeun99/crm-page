@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 
 from models.user import User
-from view.common import get_pages_indexes, get_one_result, get_results, write_csv
+from view.common import get_pages_indexes, get_one, get_all, write_csv, insert_one
 
 
 user_bp = Blueprint('user', __name__)
@@ -56,7 +56,7 @@ def users():
     search_gender = request.args.get('gender', default="", type=str)
     search_age = request.args.get('age', default=0, type=int)
 
-    users = get_results("SELECT * FROM users")
+    users = get_all("SELECT * FROM users")
         
     final_data, highlighted = filter_data(users, search_name, search_gender, search_age)
     total_pages, start_index, end_index =  get_pages_indexes(len(final_data), page)
@@ -69,7 +69,7 @@ def users():
 def user_detail():
     user_id = request.args.get('id', default="", type=str)
         
-    user_info = get_one_result("SELECT * FROM users WHERE id = ?", user_id)
+    user_info = get_one("SELECT * FROM users WHERE id = ?", user_id)
 
     return render_template("common/detail.html", model="user", detail_info=user_info)
 
@@ -77,8 +77,10 @@ def user_detail():
 def user_register():
     if request.method == 'POST':
         get = request.form
-        user = User(get['Name'], get['Gender'], get['birthdate'], get['address']).generate()
-        fieldnames = ['id', 'Name', 'Gender', 'age', 'birthdate', 'address']
-        write_csv('src/user.csv', fieldnames, user)
+        user = User(get['name'], get['gender'], get['birthdate'], get['address']).generate()
+        user_tuple = tuple(user.values())
+
+        insert_one("insert into users values (?, ?, ?, ?, ?, ?)", user_tuple)
+
         return render_template('register_complete.html', data=user)
     return render_template('user_register.html')

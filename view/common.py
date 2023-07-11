@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 import sqlite3
 import csv
 
@@ -7,7 +7,13 @@ app = Flask(__name__)
 
 DATABASE = 'user-sample.sqlite'
 
-def get_one_result(query, option=""):
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+def get_one(query, option=""):
     conn = sqlite3.connect(DATABASE)
 
     cur = conn.cursor()
@@ -23,7 +29,7 @@ def get_one_result(query, option=""):
 
     return data
 
-def get_results(query, option="") :
+def get_all(query, option="") :
     conn = sqlite3.connect(DATABASE)
     # conn.row_factory = sqlite3.Row # 결과를 딕셔너리처럼 사용 가능
 
@@ -40,15 +46,14 @@ def get_results(query, option="") :
 
     return data
 
+def insert_one(query, option="") :
+    conn = sqlite3.connect(DATABASE)
+    cur = conn.cursor()
+    cur.execute(query, option)
+    conn.commit()
 
-def get_data_from_file(filename):
-    data = []
-    with open(filename, newline='', encoding="utf-8") as file:
-        reader = csv.DictReader(file, skipinitialspace=True)
-        next(reader)
-        for row in reader:
-            data.append(dict(row))
-    return data
+def insert_all(query, option=""):
+    pass
 
 def get_pages_indexes(data_length, page):
     per_page = 20
