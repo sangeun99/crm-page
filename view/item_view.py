@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 
-from view.common import get_pages_indexes, get_results, write_csv, get_one_result
+from view.common import get_pages_indexes, get_one, get_all, insert_one
 from models.item import Item
 
 
@@ -10,7 +10,7 @@ item_bp = Blueprint('item', __name__)
 def items():
     page = request.args.get('page', default=1, type=int)
 
-    items = get_results('SELECT * FROM items')
+    items = get_all('SELECT * FROM items')
     total_pages, start_index, end_index =  get_pages_indexes(len(items), page)
 
     return render_template("common/list.html", model="item", data=items[start_index:end_index],
@@ -20,7 +20,7 @@ def items():
 def item_detail():
     item_id = request.args.get('id', default="", type=str)
 
-    item_info = get_one_result('SELECT * FROM items WHERE id=?', item_id)
+    item_info = get_one('SELECT * FROM items WHERE id=?', item_id)
 
     return render_template("common/detail.html", model="item", detail_info=item_info)
 
@@ -29,7 +29,10 @@ def item_register():
     if request.method == 'POST':
         get = request.form
         item = Item(get['itemname'], get['itemtype'], get['unitprice']).generate()
-        fieldnames = ['id', 'name', 'type', 'unitprice']
-        write_csv('src/item.csv', fieldnames, item)
+
+        item_tuple = tuple(item.values())
+
+        insert_one("insert into items values (?, ?, ?, ?)", item_tuple)
+
         return render_template('register_complete.html', data=item)
     return render_template('item_register.html')

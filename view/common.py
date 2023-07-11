@@ -1,11 +1,9 @@
 from flask import Flask, g
 import sqlite3
-import csv
-
 
 app = Flask(__name__)
 
-DATABASE = 'user-sample.sqlite'
+DATABASE = 'src/user-sample.sqlite'
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -61,8 +59,3 @@ def get_pages_indexes(data_length, page):
     start_index = (page - 1) * per_page
     end_index = page * per_page
     return total_pages, start_index, end_index
-
-def write_csv(filename, fieldnames, data) :
-    with open(filename, 'a', newline='', encoding="utf-8") as file:
-            writer = csv.DictWriter(file, skipinitialspace=True, fieldnames=fieldnames)
-            writer.writerow(data)

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template
 
 from models.user import User
-from view.common import get_pages_indexes, get_one, get_all, write_csv, insert_one
+from view.common import get_pages_indexes, get_one, get_all, insert_one
 
 
 user_bp = Blueprint('user', __name__)
