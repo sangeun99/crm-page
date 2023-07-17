@@ -33,7 +33,7 @@ def get_all(query, option="") :
 
     cur = conn.cursor()
     if option :
-        cur.execute(query, [option])
+        cur.execute(query, option)
     else :
         cur.execute(query)
     
