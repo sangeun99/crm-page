@@ -16,21 +16,25 @@ def users():
     search_gender = request.args.get('gender', default='', type=str)
     search_age = request.args.get('age', default=0, type=int)
 
-    if not search_gender :
-        search_gender_tup = ('Female', 'Male')
-    else :
-        search_gender_tup = tuple(search_gender)
+    count_query = f"""SELECT COUNT(*) FROM users 
+                     WHERE Name LIKE '%{search_name}%'"""
+    
+    if search_gender :
+        count_query += f"AND Gender='{search_gender}'"
 
-    # users = get_all("SELECT * FROM users")
-    length = get_all(f"""SELECT COUNT(*)
-                     FROM users 
-                     WHERE Name LIKE '%{search_name}%' 
-                     AND Gender IN {search_gender_tup}""")[0]['COUNT(*)']
-    total_pages, start_index, end_index =  get_pages_indexes(length, page)
-    final_data = get_all(f"""SELECT * FROM users
-                         WHERE Name LIKE '%{search_name}%'
-                         AND Gender IN {search_gender_tup}
-                         LIMIT {start_index}, {end_index}""")
+    if search_age :
+        count_query += f"AND Age BETWEEN {search_age} AND CAST({search_age} AS int)+9"
+        
+    length = get_all(count_query)[0]['COUNT(*)']
+    total_pages, per_page, start_index =  get_pages_indexes(length, page)
+
+    query = f"SELECT * FROM users WHERE Name LIKE '%{search_name}%'"
+    if search_gender :
+        query += f"AND Gender='{search_gender}'"
+    if search_age :
+        query += f"AND Age BETWEEN {search_age} AND CAST({search_age+9} AS int)"
+    query += f"LIMIT {start_index}, {per_page}"
+    final_data = get_all(query)
 
     return render_template("users.html", users=final_data,
                            total_pages=total_pages, page=page, 
