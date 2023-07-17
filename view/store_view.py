@@ -10,10 +10,15 @@ store_bp = Blueprint('store', __name__)
 def stores():
     page = request.args.get('page', default=1, type=int)
 
-    stores = get_all('SELECT * FROM stores')
-    total_pages, start_index, end_index =  get_pages_indexes(len(stores), page)
+    count_query = 'SELECT COUNT(*) FROM stores'
+    length = get_all(count_query)[0]['COUNT(*)']
 
-    return render_template("common/list.html", model="store", data=stores[start_index:end_index],
+    total_pages, per_page, start_index =  get_pages_indexes(length, page)
+    query = 'SELECT COUNT(*) FROM stores'
+    query += f"LIMIT {start_index}, {per_page}"
+    stores = get_all(query)
+
+    return render_template("common/list.html", model="store", data=stores,
                            total_pages=total_pages, page=page)
 
 @store_bp.route("/store_detail/")
