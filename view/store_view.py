@@ -45,12 +45,16 @@ def store_detail():
     
     labels = []
     total_revenues = []
+    item_counts = []
     for month_revenue in sales_per_month:
         labels.append(month_revenue['month'])
         total_revenues.append(month_revenue['total_revenue'])
+        item_counts.append(month_revenue['item_count'])
+
 
     return render_template("common/detail.html", model="store", detail_info=store_info,
-                           sales_per_month=sales_per_month, labels=labels, total_revenues=total_revenues)
+                           sales_per_month=sales_per_month,
+                           labels=labels, total_revenues=total_revenues, item_counts=item_counts)
 
 @store_bp.route("/store/register", methods=['GET', 'POST'])
 def store_register():

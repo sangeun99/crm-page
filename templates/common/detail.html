@@ -72,22 +72,37 @@ CRM - {{model}}
 
     const labels = {{ labels | tojson }}
     const total_revenues = {{ total_revenues | tojson }}
-
+    const item_counts = {{ item_counts | tojson }}
   
     new Chart(ctx, {
       type: 'bar',
       data: {
         labels: labels,
         datasets: [{
-          label: 'sales per month',
+          yAxisID: 'y1',
+          label: 'item counts',
+          type: 'line',
+          data: item_counts
+        } , {
+          yAxisID: 'y2',
+          label: 'total revenues',
           data: total_revenues,
           borderWidth: 1
         }]
       },
       options: {
         scales: {
-          y: {
-            beginAtZero: true
+          y1: {
+            position: "left",
+            grid: {
+              display: false
+            }
+          },
+          y2: {
+            position: "right",
+            grid: {
+              display: false
+            }
           }
         }
       }
