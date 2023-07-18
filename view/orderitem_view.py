@@ -9,10 +9,16 @@ orderitem_bp = Blueprint('orderitem', __name__)
 def orderitem():
     page = request.args.get('page', default=1, type=int)
 
-    orderitem = get_all('SELECT * FROM order_items')
-    total_pages, start_index, end_index =  get_pages_indexes(len(orderitem), page)
+    count_query = 'SELECT COUNT(*) FROM order_items'
+    length = get_all(count_query)[0]['COUNT(*)']
 
-    return render_template("common/list.html", model="orderitem", data=orderitem[start_index:end_index],
+    total_pages, per_page, start_index =  get_pages_indexes(length, page)
+    query = 'SELECT * FROM order_items'
+    query += f" LIMIT {start_index}, {per_page}"
+    print(query)
+    orderitem = get_all(query)
+
+    return render_template("common/list.html", model="orderitem", data=orderitem,
                            total_pages=total_pages, page=page)
 
 @orderitem_bp.route('/orderitem_detail/')

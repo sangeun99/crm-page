@@ -20,20 +20,20 @@ def users():
                      WHERE Name LIKE '%{search_name}%'"""
     
     if search_gender :
-        count_query += f"AND Gender='{search_gender}'"
+        count_query += f" AND Gender='{search_gender}'"
 
     if search_age :
-        count_query += f"AND Age BETWEEN {search_age} AND CAST({search_age} AS int)+9"
+        count_query += f" AND Age BETWEEN {search_age} AND CAST({search_age} AS int)+9"
         
     length = get_all(count_query)[0]['COUNT(*)']
     total_pages, per_page, start_index =  get_pages_indexes(length, page)
 
     query = f"SELECT * FROM users WHERE Name LIKE '%{search_name}%'"
     if search_gender :
-        query += f"AND Gender='{search_gender}'"
+        query += f" AND Gender='{search_gender}'"
     if search_age :
-        query += f"AND Age BETWEEN {search_age} AND CAST({search_age+9} AS int)"
-    query += f"LIMIT {start_index}, {per_page}"
+        query += f" AND Age BETWEEN {search_age} AND CAST({search_age+9} AS int)"
+    query += f" LIMIT {start_index}, {per_page}"
     final_data = get_all(query)
 
     return render_template("users.html", users=final_data,

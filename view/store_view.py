@@ -14,8 +14,8 @@ def stores():
     length = get_all(count_query)[0]['COUNT(*)']
 
     total_pages, per_page, start_index =  get_pages_indexes(length, page)
-    query = 'SELECT COUNT(*) FROM stores'
-    query += f"LIMIT {start_index}, {per_page}"
+    query = 'SELECT * FROM stores'
+    query += f" LIMIT {start_index}, {per_page}"
     stores = get_all(query)
 
     return render_template("common/list.html", model="store", data=stores,
