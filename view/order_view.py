@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 
-from view.common import get_pages_indexes, get_all, get_one
+from view.common import get_pages_indexes, get_all, get_one, get_length
 
 
 order_bp = Blueprint('order', __name__)
@@ -9,8 +9,7 @@ order_bp = Blueprint('order', __name__)
 def orders():
     page = request.args.get('page', default=1, type=int)
 
-    count_query = 'SELECT COUNT(*) FROM orders'
-    length = get_all(count_query)[0]['COUNT(*)']
+    length = get_length("orders")
 
     total_pages, per_page, start_index = get_pages_indexes(length, page)
     query = 'SELECT * FROM orders'

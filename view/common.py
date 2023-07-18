@@ -58,3 +58,8 @@ def get_pages_indexes(data_length, page):
     total_pages = (data_length - 1) // per_page + 1
     start_index = (page - 1) * per_page
     return total_pages, per_page, start_index
+
+def get_length(table_name):
+    count_query = f'SELECT COUNT(*) FROM {table_name}'
+    length = get_all(count_query)[0]['COUNT(*)']
+    return length
