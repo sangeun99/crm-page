@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 
-from view.common import get_pages_indexes, get_one, get_all, insert_one
+from view.common import get_pages_indexes, get_one, get_all, insert_one, get_length
 from models.store import Store
 
 
@@ -10,16 +10,23 @@ store_bp = Blueprint('store', __name__)
 def stores():
     page = request.args.get('page', default=1, type=int)
 
-    count_query = 'SELECT COUNT(*) FROM stores'
-    length = get_all(count_query)[0]['COUNT(*)']
+    length = get_length("stores")
 
-    total_pages, per_page, start_index =  get_pages_indexes(length, page)
+    total_pages, per_page, start_index = get_pages_indexes(length, page)
     query = 'SELECT * FROM stores'
     query += f" LIMIT {start_index}, {per_page}"
     stores = get_all(query)
 
-    return render_template("common/list.html", model="store", data=stores,
-                           total_pages=total_pages, page=page)
+    sales_per_month_query = """SELECT substr(O.orderat, 0, 8) AS "Month", sum(I.unitprice) AS "Total Revenue", count(I.Id) AS "Item Count"
+    FROM stores S
+    JOIN orders O on O.storeid = S.Id
+    JOIN order_items OI on O.Id = OI.orderid
+    JOIN items I on OI.itemid = I.Id
+    GROUP BY substr(O.orderat, 0, 8);"""
+    sales_per_month = get_all(sales_per_month_query)
+
+    return render_template("stores.html", model="store", data=stores,
+                           total_pages=total_pages, page=page, sales_per_month=sales_per_month)
 
 @store_bp.route("/store_detail/")
 def store_detail():
@@ -27,7 +34,16 @@ def store_detail():
 
     store_info = get_one('SELECT * FROM stores WHERE id = ?', store_id)
 
-    return render_template("common/detail.html", model="store", detail_info=store_info)
+    sales_per_month_query = f"""SELECT substr(O.orderat, 0, 8) AS "Month", sum(I.unitprice) AS "Total Revenue", count(I.Id) AS "Item Count"
+    FROM stores S
+    JOIN orders O on O.storeid = S.Id
+    JOIN order_items OI on O.Id = OI.orderid
+    JOIN items I on OI.itemid = I.Id
+    WHERE S.Id = "{store_id}"
+    GROUP BY substr(O.orderat, 0, 8);"""
+    sales_per_month = get_all(sales_per_month_query)
+
+    return render_template("common/detail.html", model="store", detail_info=store_info, sales_per_month=sales_per_month)
 
 @store_bp.route("/store/register", methods=['GET', 'POST'])
 def store_register():

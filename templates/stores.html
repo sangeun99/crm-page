@@ -1,0 +1,54 @@
+{% extends 'common/base.html' %} 
+
+{% block title%}
+CRM - {{model}}
+{% endblock %}
+
+{% block content %}
+
+<table class="info-table">
+  <tr class="info-row">
+    {% for key in data[0].keys() %}
+    <th class="info-type">
+      {{ key }}
+    </th>
+    {% endfor %}
+  </tr>
+  {% for d in data %}
+  <tr class="info-row background">
+    {% for key in data[0].keys() %}
+    <td class="info-single-item">
+      {% if key == 'Id' %}
+      <a class="id-link" href="/{{model}}_detail/?id={{d[key]}}">{{ d[key] }}</a>
+      {% else %}
+      {{ d[key] }}
+      {% endif %}
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+
+{% set keywords = '' %}
+{% include 'common/pagination.html'%}
+
+<table class="info-table">
+  <tr class="info-row">
+    {% for key in sales_per_month[0].keys() %}
+    <th class="info-type">
+      {{ key }}
+    </th>
+    {% endfor %}
+  </tr>
+  {% for d in sales_per_month %}
+  <tr class="info-row background">
+    {% for key in sales_per_month[0].keys() %}
+    <td class="info-single-item">
+      {{ d[key] }}
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

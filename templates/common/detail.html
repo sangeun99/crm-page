@@ -35,6 +35,72 @@ CRM - {{model}}
   </tr>
 </table>
 
+{% if sales_per_month %}
+  <table class="info-table">
+    <tr class="info-row">
+      {% for key in sales_per_month[0].keys() %}
+      <th class="info-type">
+        {{ key }}
+      </th>
+      {% endfor %}
+    </tr>
+    {% for d in sales_per_month %}
+    <tr class="info-row background">
+      {% for key in sales_per_month[0].keys() %}
+      <td class="info-single-item">
+        {{ d[key] }}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+
+
+{% if purchased_info %}
+<h2>주문 정보</h2>
+<table class="info-table">
+  <tr class="info-row">
+    {% for key in purchased_info[0].keys() %}
+    <th class="info-type">
+      {{ key }}
+    </th>
+    {% endfor %}
+  </tr>
+  {% for d in purchased_info %}
+  <tr class="info-row background">
+    {% for key in purchased_info[0].keys() %}
+    <td class="info-single-item">
+      {{ d[key] }}
+    </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if top_store %}
+<h2>자주 방문한 매장 TOP 5</h2>
+<ul>
+  {% for store in top_store %}
+  <li>
+    {{store['store_name']}} ({{store['visited']}}번 방문)
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if top_item %}
+<h2>자주 주문한 상품명 TOP 5</h2>
+<ul>
+  {% for item in top_item %}
+  <li>
+    {{item['Name']}} ({{item['count_ordered']}}번 주문)
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
 <button onclick="window.history.back()">뒤로 돌아가기</button>
 
 {% endblock %}
