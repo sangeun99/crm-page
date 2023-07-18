@@ -34,7 +34,7 @@ def store_detail():
 
     store_info = get_one('SELECT * FROM stores WHERE id = ?', store_id)
 
-    sales_per_month_query = f"""SELECT substr(O.orderat, 0, 8) AS "Month", sum(I.unitprice) AS "Total Revenue", count(I.Id) AS "Item Count"
+    sales_per_month_query = f"""SELECT substr(O.orderat, 0, 8) AS "month", sum(I.unitprice) AS "total_revenue", count(I.Id) AS "item_count"
     FROM stores S
     JOIN orders O on O.storeid = S.Id
     JOIN order_items OI on O.Id = OI.orderid
@@ -42,8 +42,15 @@ def store_detail():
     WHERE S.Id = "{store_id}"
     GROUP BY substr(O.orderat, 0, 8);"""
     sales_per_month = get_all(sales_per_month_query)
+    
+    labels = []
+    total_revenues = []
+    for month_revenue in sales_per_month:
+        labels.append(month_revenue['month'])
+        total_revenues.append(month_revenue['total_revenue'])
 
-    return render_template("common/detail.html", model="store", detail_info=store_info, sales_per_month=sales_per_month)
+    return render_template("common/detail.html", model="store", detail_info=store_info,
+                           sales_per_month=sales_per_month, labels=labels, total_revenues=total_revenues)
 
 @store_bp.route("/store/register", methods=['GET', 'POST'])
 def store_register():

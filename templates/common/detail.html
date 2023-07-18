@@ -35,7 +35,13 @@ CRM - {{model}}
   </tr>
 </table>
 
+<!-- 
+  ==============
+      STORE
+  ==============
+ -->
 {% if sales_per_month %}
+  <h2>월별 매출액</h2>
   <table class="info-table">
     <tr class="info-row">
       {% for key in sales_per_month[0].keys() %}
@@ -54,9 +60,46 @@ CRM - {{model}}
     </tr>
     {% endfor %}
   </table>
+
+  <div>
+    <canvas id="SalesChart"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    const ctx = document.getElementById('SalesChart');
+
+    const labels = {{ labels | tojson }}
+    const total_revenues = {{ total_revenues | tojson }}
+
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'sales per month',
+          data: total_revenues,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
 {% endif %}
 
-
+<!-- 
+  ==============
+      USER
+  ==============
+ -->
 {% if purchased_info %}
 <h2>주문 정보</h2>
 <table class="info-table">
