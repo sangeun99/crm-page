@@ -10,7 +10,10 @@ class User:
         self.gender = gender
         self.birthdate = birthdate
         dateToday = datetime.datetime.now()
-        self.age = dateToday.year - int(birthdate[:4]) + 1
+        if birthdate :
+            self.age = dateToday.year - int(birthdate[:4]) + 1
+        else :
+            self.age = 0
         self.address = address
 
     def generate(self):
