@@ -8,11 +8,7 @@ user_bp = Blueprint('user', __name__)
 
 def get_length_users(table_name, search_name, search_gender, search_age) :
     count_query = f"""SELECT COUNT(*) FROM {table_name} 
-                     WHERE Name LIKE '%{search_name}%'"""
-    
-    if search_gender :
-        count_query += " "
-        count_query += f"AND Gender='{search_gender}'"
+                     WHERE Name LIKE '%{search_name}%' AND Gender LIKE '%{search_gender}%'"""
 
     if search_age :
         count_query += " "
@@ -20,7 +16,6 @@ def get_length_users(table_name, search_name, search_gender, search_age) :
 
     length = get_all(count_query)[0]['COUNT(*)']
     return length
-        
 
 # TODO: 형광펜 프론트에서 처리
 
@@ -35,9 +30,7 @@ def users():
     length = get_length_users("users", search_name, search_gender, search_age)
     total_pages, per_page, start_index =  get_pages_indexes(length, page)
 
-    query = f"SELECT * FROM users WHERE Name LIKE '%{search_name}%'"
-    if search_gender :
-        query += f" AND Gender='{search_gender}'"
+    query = f"SELECT * FROM users WHERE Name LIKE '%{search_name}%' AND Gender LIKE '{search_gender}%'"
     if search_age :
         query += f" AND Age BETWEEN {search_age} AND CAST({search_age+9} AS int)"
     query += f" LIMIT {start_index}, {per_page}"
