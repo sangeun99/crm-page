@@ -5,6 +5,7 @@ from view.order_view import order_bp
 from view.orderitem_view import orderitem_bp
 from view.item_view import item_bp
 from view.store_view import store_bp
+from view.kiosk_view import kiosk_bp
 
 
 app = Flask(__name__, static_folder="static")
@@ -14,8 +15,9 @@ app.register_blueprint(order_bp)
 app.register_blueprint(orderitem_bp)
 app.register_blueprint(item_bp)
 app.register_blueprint(store_bp)
+app.register_blueprint(kiosk_bp)
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def root():
     return render_template('home.html')
 
