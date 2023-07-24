@@ -281,3 +281,25 @@ button:hover {
 .paging:not(.current):hover {
   background-color: var(--bs-blue-light);
 }
+
+
+/* 
+==================
+    kiosk
+==================
+*/
+
+.kiosk-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 30px;
+}
+
+.kiosk-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  border: 1px var(--border) solid;
+  border-radius: 5px;
+}
