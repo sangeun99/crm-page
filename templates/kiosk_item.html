@@ -8,54 +8,25 @@ CRM - {{model}}
 
 <h3>{{ store_info['Name'] }}입니다</h3>
 
-<table class="info-table">
-  <tr class="info-row">
-    {% for key in data[0].keys() %}
-    <th class="info-type">
-      {{ key }}
-    </th>
-    {% endfor %}
-  </tr>
+<div class="kiosk-container">
   {% for d in data %}
-  <tr class="info-row background">
+  <div class="kiosk-item">
     {% for key in data[0].keys() %}
-    <td class="info-single-item">
+    {% if key != 'Id' and key != 'Type' %}
+    <p>
       {{ d[key] }}
-    </td>
+    </p>
+    {% endif %}
     {% endfor %}
-    <td>
-        <!-- <input name="storeid" type="text" value="{{ store_info['Id'] }}" readonly hidden>
-        <input name="itemid" type="text" value="{{ d['Id'] }}" readonly hidden> -->
-        <button type="button" onClick="addToCart('{{ store_info['Id'] }}', '{{ d['Id'] }}')">
-          추가
-        </button>
-    </td>
-  </tr>
+    <form action="/kiosk/order/" method="post" target="_self">
+      <input name="storeid" type="text" value="{{ store_info['Id'] }}" readonly hidden>
+      <input name="itemid" type="text" value="{{ d['Id'] }}" readonly hidden>
+      <button type="submit">
+        추가
+      </button>
+    </form>
+  </div>
   {% endfor %}
-</table>
-<form action="/kiosk/order/" method="post" target="_self">
-  <button type="submit">
-    주문
-  </button>
-</form>
-
-<h2>장바구니</h2>
-<div id="cart">
-
 </div>
 
-<script>
-  var cart = [];
-
-  function addToCart(store_info, item_info) {
-    var newCart = {};
-    newCart['store'] = store_info;
-    newCart['item'] = item_info;
-    cart.push(newCart)
-    document.getElementById("cart").innerHTML += newCart['store']
-    document.getElementById("cart").innerHTML += newCart['item']
-
-  };
-
-</script>
 {% endblock %}
