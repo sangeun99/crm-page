@@ -17,12 +17,14 @@ def stores():
     query += f" LIMIT {start_index}, {per_page}"
     stores = get_all(query)
 
-    sales_per_month_query = """SELECT substr(O.orderat, 0, 8) AS "Month", sum(I.unitprice) AS "Total Revenue", count(I.Id) AS "Item Count"
-    FROM stores S
-    JOIN orders O on O.storeid = S.Id
-    JOIN order_items OI on O.Id = OI.orderid
-    JOIN items I on OI.itemid = I.Id
-    GROUP BY substr(O.orderat, 0, 8);"""
+    sales_per_month_query = """
+        SELECT substr(O.orderat, 0, 8) AS "Month", sum(I.unitprice) AS "Total Revenue", count(I.Id) AS "Item Count"
+        FROM stores S
+        JOIN orders O on O.storeid = S.Id
+        JOIN order_items OI on O.Id = OI.orderid
+        JOIN items I on OI.itemid = I.Id
+        GROUP BY substr(O.orderat, 0, 8);
+        """
     sales_per_month = get_all(sales_per_month_query)
 
     return render_template("stores.html", model="store", data=stores,
@@ -34,13 +36,15 @@ def store_detail():
 
     store_info = get_one('SELECT * FROM stores WHERE id = ?', store_id)
 
-    sales_per_month_query = f"""SELECT substr(O.orderat, 0, 8) AS "month", sum(I.unitprice) AS "total_revenue", count(I.Id) AS "item_count"
-    FROM stores S
-    JOIN orders O on O.storeid = S.Id
-    JOIN order_items OI on O.Id = OI.orderid
-    JOIN items I on OI.itemid = I.Id
-    WHERE S.Id = "{store_id}"
-    GROUP BY substr(O.orderat, 0, 8);"""
+    sales_per_month_query = f"""
+        SELECT substr(O.orderat, 0, 8) AS "month", sum(I.unitprice) AS "total_revenue", count(I.Id) AS "item_count"
+        FROM stores S
+        JOIN orders O on O.storeid = S.Id
+        JOIN order_items OI on O.Id = OI.orderid
+        JOIN items I on OI.itemid = I.Id
+        WHERE S.Id = "{store_id}"
+        GROUP BY substr(O.orderat, 0, 8);
+        """
     sales_per_month = get_all(sales_per_month_query)
     
     labels = []
@@ -63,7 +67,7 @@ def store_register():
         store = Store(get['storetype'], get['storelocation'], get['address']).generate()
         store_tuple = tuple(store.values())
 
-        insert_one("insert into stores values (?, ?, ?, ?)", store_tuple)
+        insert_one("INSERT INTO stores VALUES (?, ?, ?, ?)", store_tuple)
 
         return render_template('register_complete.html', data=store)
     return render_template('store_register.html')

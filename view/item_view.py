@@ -37,7 +37,7 @@ def item_register():
 
         item_tuple = tuple(item.values())
 
-        insert_one("insert into items values (?, ?, ?, ?)", item_tuple)
+        insert_one("INSERT INTO items VALUES (?, ?, ?, ?)", item_tuple)
 
         return render_template('register_complete.html', data=item)
     return render_template('item_register.html')
