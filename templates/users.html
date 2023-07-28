@@ -30,10 +30,10 @@ CRM - USERS
   </form>
 </div>
 <div class="sub-menu">
-  <a class="filter" href="/users/?&name={{search_name}}&gender={{search_gender}}&age=0">전체</a>
+  <a class="filter" href="{{ url_for('users', name=search_name, gender=search_gender, age=0) }}">전체</a>
   {% for i in range(10, 60, 10) %}
   <a class="filter {% if i == search_age %} selected {% endif %}"
-    href="/users/?&name={{search_name}}&gender={{search_gender}}&age={{i}}">
+    href="{{ url_for('users', name=search_name, gender=search_gender, age=i) }}">
     {{i}}대</a>
   {% endfor %}
 </div>
@@ -48,26 +48,36 @@ CRM - USERS
 <table class="info-table">
   <thead>
     <tr class="info-row">
-      {% for key in users[0].keys() %}
-      {% if key != 'Id' %}
+      {% for key in header %}
       <th class="info-type">
         {{ key }}
       </th>
-      {% endif %}
       {% endfor %}
     </tr>
   </thead>
   <tbody>
-    {% for i in range(users|length) %}
-    {% set userDetatilURL ='/user_detail/?id=' + users[i]['Id'] %}
-    <tr class="info-row background" onclick="window.location.href='{{userDetatilURL}}'">
-      {% for key in users[i].keys() %}
-      {% if key != 'Id' %}
+    {% for user in users %}
+    <tr class="info-row background">
       <td class="info-single-item">
-        {{users[i][key]}}
+        <a href="{{ url_for('user_detail', id=user.Id) }}">
+          {{ user.Id }}
+        </a>
       </td>
-      {% endif %}
-      {% endfor %}
+      <td class="info-single-item">
+        {{ user.Name }}
+      </td>
+      <td class="info-single-item">
+        {{ user.Gender }}
+      </td>
+      <td class="info-single-item">
+        {{ user.Age }}
+      </td>
+      <td class="info-single-item">
+        {{ user.Birthdate }}
+      </td>
+      <td class="info-single-item">
+        {{ user.Address }}
+      </td>
     </tr>
     {% endfor %}
   </tbody>

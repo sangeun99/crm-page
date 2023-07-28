@@ -232,7 +232,6 @@ button:hover {
 
 .info-row.background:hover{
   background-color: var(--bs-blue-light);
-  cursor: pointer;
 }
 
 .info-single-item {

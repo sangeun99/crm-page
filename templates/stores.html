@@ -1,54 +1,58 @@
 {% extends 'common/base.html' %} 
 
 {% block title%}
-CRM - {{model}}
+CRM - STORES
 {% endblock %}
 
 {% block content %}
 
+<!-- 
+==================
+      table
+==================
+-->
+
+{% if stores %}
 <table class="info-table">
-  <tr class="info-row">
-    {% for key in data[0].keys() %}
-    <th class="info-type">
-      {{ key }}
-    </th>
+  <thead>
+    <tr class="info-row">
+      {% for key in header %}
+      <th class="info-type">
+        {{ key }}
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for store in stores %}
+    <tr class="info-row background">
+      <td class="info-single-item">
+        <!-- <a href="/store_detail/?id={{store.Id}}"> -->
+        <a href="{{ url_for('store_detail', id=store.Id) }}">
+          {{ store.Id }}
+        </a>
+      </td>
+      <td class="info-single-item">
+        {{ store.Name }}
+      </td>
+      <td class="info-single-item">
+        {{ store.Type }}
+      </td>
+      <td class="info-single-item">
+        {{ store.Address }}
+      </td>
+    </tr>
     {% endfor %}
-  </tr>
-  {% for d in data %}
-  <tr class="info-row background">
-    {% for key in data[0].keys() %}
-    <td class="info-single-item">
-      {% if key == 'Id' %}
-      <a class="id-link" href="/{{model}}_detail/?id={{d[key]}}">{{ d[key] }}</a>
-      {% else %}
-      {{ d[key] }}
-      {% endif %}
-    </td>
-    {% endfor %}
-  </tr>
-  {% endfor %}
+  </tbody>
 </table>
+{% endif %}
+
+<!-- 
+==================
+    pagination
+==================
+-->
 
 {% set keywords = '' %}
 {% include 'common/pagination.html'%}
-
-<table class="info-table">
-  <tr class="info-row">
-    {% for key in sales_per_month[0].keys() %}
-    <th class="info-type">
-      {{ key }}
-    </th>
-    {% endfor %}
-  </tr>
-  {% for d in sales_per_month %}
-  <tr class="info-row background">
-    {% for key in sales_per_month[0].keys() %}
-    <td class="info-single-item">
-      {{ d[key] }}
-    </td>
-    {% endfor %}
-  </tr>
-  {% endfor %}
-</table>
-
 {% endblock %}
