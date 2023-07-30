@@ -30,7 +30,7 @@ CRM - {{model}}
       Type
     </th>
     <th class="info-type">
-      Address
+      UnitPrice
     </th>
   </tr>
   <tr class="info-row">
@@ -44,40 +44,10 @@ CRM - {{model}}
       {{ detail_info.Type }}
     </td>
     <td class="info-single-item">
-      {{ detail_info.Address }}
+      {{ detail_info.UnitPrice }}
     </td>
   </tr>
 </table>
-
-{% if sales_per_month_info %}
-  <h2>월별 매출액</h2>
-  <table class="info-table">
-    <tr class="info-row">
-      <th class="info-type">
-        month
-      </th>
-      <th class="info-type">
-        total_revenue
-      </th>
-      <th class="info-type">
-        item_count
-      </th>
-    </tr>
-    {% for d in sales_per_month_info %}
-    <tr class="info-row background">
-      <td class="info-single-item">
-        {{ d.month }}
-      </td>
-      <td class="info-single-item">
-        {{ d.total_revenue }}
-      </td>
-      <td class="info-single-item">
-        {{ d.item_count }}
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-{% endif %}
 
 <button onclick="window.history.back()">뒤로 돌아가기</button>
 

@@ -1,0 +1,57 @@
+{% extends 'common/base.html' %} 
+
+{% block title%}
+CRM - ITEMS
+{% endblock %}
+
+{% block content %}
+
+<!-- 
+==================
+      table
+==================
+-->
+
+{% if items %}
+<table class="info-table">
+  <thead>
+    <tr class="info-row">
+      {% for key in header %}
+      <th class="info-type">
+        {{ key }}
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr class="info-row background">
+      <td class="info-single-item">
+        <a href="{{ url_for('item_detail', id=item.Id) }}">
+          {{ item.Id }}
+        </a>
+      </td>
+      <td class="info-single-item">
+        {{ item.Name }}
+      </td>
+      <td class="info-single-item">
+        {{ item.Type }}
+      </td>
+      <td class="info-single-item">
+        {{ item.UnitPrice }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<!-- 
+==================
+    pagination
+==================
+-->
+
+{% set keywords = '' %}
+{% include 'common/pagination.html'%}
+{% endblock %}

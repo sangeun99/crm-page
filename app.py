@@ -179,5 +179,40 @@ def store_detail():
     store_id = request.args.get('id', default="", type=str)
 
     store_info = Store.query.filter_by(Id=store_id).first()
+
+    # sales_per_month_info
+    sales_per_month_info = db.session.query(Store.Name.label("storename"), func.substr(Order.OrderAt, 0, 8).label("month"), func.sum(Item.UnitPrice).label("total_revenue"), func.count(Item.Id).label("item_count")) \
+        .join(Order, Order.StoreId == Store.Id) \
+        .join(OrderItem, Order.Id == OrderItem.OrderId) \
+        .join(Item, Item.Id == OrderItem.ItemId) \
+        .filter(Store.Id == store_id) \
+        .group_by(func.substr(Order.OrderAt, 0, 8)) \
+        .all()
+    print(sales_per_month_info)
+
+    return render_template("store_detail.html", model="store", detail_info=store_info,
+                           sales_per_month_info=sales_per_month_info)
+
+@app.route('/item_detail/')
+def item_detail():
+    item_id = request.args.get('id', default=1, type=str)
+
+    item_info = Item.query.filter_by(Id=item_id).first()
+
+    return render_template("item_detail.html", model="item", detail_info=item_info)
     
-    return render_template("store_detail.html", model="user", detail_info=store_info)
+@app.route('/items/')
+def items():
+    page = request.args.get('page', default=1, type=int)
+
+    length = get_length(Item)
+    total_pages, per_page, start_index = get_pages_indexes(length, page)
+
+    items = Item.query \
+        .offset(start_index) \
+        .limit(per_page) \
+        .all()
+    
+    header = ['Id', 'Name', 'Type', 'UnitPrice']
+    return render_template("items.html", items=items,
+                           total_pages=total_pages, page=page, header=header)
