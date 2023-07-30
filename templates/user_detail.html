@@ -1,12 +1,12 @@
 {% extends 'common/base.html' %}
 
 {% block title%}
-CRM - {{model}}
+CRM - {{ model }}
 {% endblock %}
 
 {% block content %}
 
-<h2>User '{{detail_info['Name']}}'님</h2>
+<h2>User '{{ detail_info['Name'] }}'님</h2>
 
 <table class="info-table">
   <tr class="info-row">
@@ -91,7 +91,7 @@ CRM - {{model}}
 <ul>
   {% for store in top_store %}
   <li>
-    {{store.storename}} ({{store.count_visited}}번 방문)
+    {{ store.storename }} ({{ store.count_visited }}번 방문)
   </li>
   {% endfor %}
 </ul>
@@ -102,7 +102,7 @@ CRM - {{model}}
 <ul>
   {% for item in top_item %}
   <li>
-    {{item.itemname}} ({{item.count_ordered}}번 주문)
+    {{ item.itemname }} ({{ item.count_ordered }}번 주문)
   </li>
   {% endfor %}
 </ul>
