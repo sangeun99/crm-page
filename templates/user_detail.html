@@ -76,7 +76,9 @@ CRM - {{ model }}
       {{ d.username }}
     </td>
     <td class="info-single-item">
-      {{ d.orderid }}
+      <a href="{{ url_for('order.order_detail', id=d.orderid) }}">
+        {{ d.orderid }}
+      </a>
     </td>
     <td class="info-single-item">
       {{ d.orderat }}

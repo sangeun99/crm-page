@@ -1,0 +1,48 @@
+{% extends 'common/base.html' %}
+
+{% block title%}
+CRM - {{model}}
+{% endblock %}
+
+{% block content %}
+
+<h2>Order Id '{{detail_info['Id']}}'</h2>
+
+<table class="info-table">
+  <tr class="info-row">
+    <th class="info-type">
+      Id
+    </th>
+    <th class="info-type">
+      OrderAt
+    </th>
+    <th class="info-type">
+      StoreId
+    </th>
+    <th class="info-type">
+      UserId
+    </th>
+  </tr>
+  <tr class="info-row">
+    <td class="info-single-item">
+      {{ detail_info.Id }}
+    </td>
+    <td class="info-single-item">
+      {{ detail_info.OrderAt }}
+    </td>
+    <td class="info-single-item">
+      <a href="{{ url_for('store.store_detail', id=detail_info.StoreId) }}">
+        {{ detail_info.StoreId }}
+      </a>
+    </td>
+    <td class="info-single-item">
+      <a href="{{ url_for('user.user_detail', id=detail_info.UserId) }}">
+        {{ detail_info.UserId }}
+      </a>
+    </td>
+  </tr>
+</table>
+
+<button onclick="window.history.back()">뒤로 돌아가기</button>
+
+{% endblock %}

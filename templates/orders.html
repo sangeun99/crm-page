@@ -1,0 +1,44 @@
+{% extends 'common/base.html' %}
+
+{% block title %}
+CRM - Order
+{% endblock %}
+
+{% block content %}
+
+<table class="info-table">
+  <tr class="info-row">
+    {% for key in header %}
+    <th class="info-type">
+      {{ key }}
+    </th>
+    {% endfor %}
+  </tr>
+  {% for d in data %}
+  <tr class="info-row background">
+    <td class="info-single-item">
+      <a href="{{ url_for('order.order_detail', id=d.Id) }}">
+        {{ d.Id }}
+      </a>
+    </td>
+    <td class="info-single-item">
+      {{ d.OrderAt }}
+    </td>
+    <td class="info-single-item">
+      <a href="{{ url_for('store.store_detail', id=d.StoreId) }}">
+        {{ d.StoreId }}
+      </a>
+    </td>
+    <td class="info-single-item">
+      <a href="{{ url_for('user.user_detail', id=d.UserId) }}">
+        {{ d.UserId }}
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% set keywords = '' %}
+{% include 'common/pagination.html' %}
+
+{% endblock %}
