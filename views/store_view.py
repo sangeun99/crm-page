@@ -48,7 +48,6 @@ def store_detail():
         .filter(Store.Id == store_id) \
         .group_by(func.substr(Order.OrderAt, 0, 8)) \
         .all()
-    print(sales_per_month_info)
 
     return render_template("store_detail.html", model="store", detail_info=store_info,
                            sales_per_month_info=sales_per_month_info)
