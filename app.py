@@ -6,6 +6,7 @@ from views.user_view import user_bp
 from views.store_view import store_bp
 from views.item_view import item_bp
 from views.order_view import order_bp
+from views.orderitem_view import orderitem_bp
 
 
 app = Flask(__name__)
@@ -29,6 +30,7 @@ app.register_blueprint(user_bp)
 app.register_blueprint(store_bp)
 app.register_blueprint(item_bp)
 app.register_blueprint(order_bp)
+app.register_blueprint(orderitem_bp)
 
 @app.route('/')
 def main():
