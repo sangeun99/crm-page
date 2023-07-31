@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request
-
 from sqlalchemy import and_
 from sqlalchemy import func
+import datetime
+import uuid
+
 from database.model import db, User, Store, Item, Order, OrderItem
 
 
@@ -20,6 +22,15 @@ def get_length_users(search_name, search_gender, search_age) :
         .filter(and_(search_age < User.Age, User.Age < search_age + 9)) \
         .first()
     return int(users_count[0])
+
+def get_age(birthdate) :
+    dateToday = datetime.datetime.now()
+    if birthdate :
+        age = dateToday.year - int(birthdate[:4]) + 1
+    return age
+
+def generate_id():
+    return str(uuid.uuid4())
 
 @user_bp.route('/users/')
 def users():
@@ -80,3 +91,13 @@ def user_detail():
 
     return render_template("user_detail.html", model="user", detail_info=user_info,
                            purchased_info=user_purchased_info, top_store=user_top_store_info, top_item=user_top_item_info)
+
+@user_bp.route("/user/register", methods=['GET', 'POST'])
+def user_register():
+    if request.method == 'POST' :
+        get = request.form
+        new_user = User(Id=generate_id(), Name=get['name'], Gender=get['gender'], Age=get_age(get['birthdate']), Birthdate=get['birthdate'], Address=get['address'])
+        db.session.add(new_user)
+        db.session.commit()
+        return render_template('register_complete.html', new_data=new_user)
+    return render_template('user_register.html')
