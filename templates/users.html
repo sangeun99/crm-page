@@ -30,10 +30,10 @@ CRM - USERS
   </form>
 </div>
 <div class="sub-menu">
-  <a class="filter" href="{{ url_for('users', name=search_name, gender=search_gender, age=0) }}">전체</a>
+  <a class="filter" href="{{ url_for('user.users', name=search_name, gender=search_gender, age=0) }}">전체</a>
   {% for i in range(10, 60, 10) %}
   <a class="filter {% if i == search_age %} selected {% endif %}"
-    href="{{ url_for('users', name=search_name, gender=search_gender, age=i) }}">
+    href="{{ url_for('user.users', name=search_name, gender=search_gender, age=i) }}">
     {{i}}대</a>
   {% endfor %}
 </div>
@@ -59,7 +59,7 @@ CRM - USERS
     {% for user in users %}
     <tr class="info-row background">
       <td class="info-single-item">
-        <a href="{{ url_for('user_detail', id=user.Id) }}">
+        <a href="{{ url_for('user.user_detail', id=user.Id) }}">
           {{ user.Id }}
         </a>
       </td>

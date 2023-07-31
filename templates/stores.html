@@ -27,7 +27,7 @@ CRM - STORES
     {% for store in stores %}
     <tr class="info-row background">
       <td class="info-single-item">
-        <a href="{{ url_for('store_detail', id=store.Id) }}">
+        <a href="{{ url_for('store.store_detail', id=store.Id) }}">
           {{ store.Id }}
         </a>
       </td>

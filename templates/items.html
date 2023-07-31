@@ -27,7 +27,7 @@ CRM - ITEMS
     {% for item in items %}
     <tr class="info-row background">
       <td class="info-single-item">
-        <a href="{{ url_for('item_detail', id=item.Id) }}">
+        <a href="{{ url_for('item.item_detail', id=item.Id) }}">
           {{ item.Id }}
         </a>
       </td>
