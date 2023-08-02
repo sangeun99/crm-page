@@ -12,7 +12,7 @@ from views.orderitem_view import orderitem_bp
 app = Flask(__name__)
 
 app.instance_path = os.path.join(os.getcwd(), 'src')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user-sample.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///crm.db'
 app.config['SQLALCHEMY_TRACK_MODIFIATIONS'] = False
 app.debug = True
 
